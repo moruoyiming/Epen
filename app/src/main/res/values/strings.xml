@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TstudyTDPenDemo</string>
+    <string name="app_name">听说读写</string>
 
     <string name="notifyTitle">提示</string>
     <string name="gpsNotifyMsg">当前手机扫描蓝牙需要打开定位功能。</string>

@@ -6,6 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.tstudy.blependemo"
+//        applicationId "com.tstudy.students"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1

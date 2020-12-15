@@ -1,4 +1,4 @@
-package com.tstudy.blependemo;
+package com.rwls.students;
 
 
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.data.BleDevice;
+import com.tstudy.students.R;
 
 import java.util.ArrayList;
 import java.util.Collections;

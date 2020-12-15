@@ -1,4 +1,4 @@
-package com.tstudy.blependemo;
+package com.rwls.students;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -35,6 +35,7 @@ import com.tstudy.blepenlib.callback.BleUpdateCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.data.CoordinateInfo;
 import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
+import com.tstudy.students.R;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

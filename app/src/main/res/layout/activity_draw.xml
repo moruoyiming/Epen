@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.tstudy.blependemo.MyProgress
+            <com.rwls.students.MyProgress
                 android:id="@+id/pgsBar"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="0dp"

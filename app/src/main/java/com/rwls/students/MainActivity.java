@@ -1,4 +1,4 @@
-package com.tstudy.blependemo;
+package com.rwls.students;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -36,13 +36,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.permission.annotation.Permission;
 import com.example.permission.annotation.PermissionCancel;
 import com.example.permission.annotation.PermissionDenied;
-import com.example.webview.WebViewActivity;
 import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.callback.BleGattCallback;
 import com.tstudy.blepenlib.callback.BleScanCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.exception.BleException;
 import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
+import com.tstudy.students.R;
 
 import java.util.List;
 

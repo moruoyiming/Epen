@@ -1,4 +1,4 @@
-package com.tstudy.blependemo;
+package com.rwls.students;
 
 import android.app.Application;
 
