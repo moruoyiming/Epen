@@ -1,0 +1,44 @@
+2020-06-09 14:51:21.378 10077-10077/com.tstudy.blependemo D/MainActivity_tag: gpsIsOpen: gpsfalse    passivetrue     network true
+2020-06-09 14:51:22.061 10077-10090/com.tstudy.blependemo D/TstudyBle_tag: BluetoothGattCallback：onConnectionStateChange 
+    status: 0
+    newState: 0
+    currentThread: 11332
+2020-06-09 14:51:22.316 10077-10077/com.tstudy.blependemo D/MainActivity_tag: onDisConnected: 断开了
+2020-06-09 14:51:22.323 10077-10077/com.tstudy.blependemo I/TstudyBle_tag: refreshDeviceCache, is success:  true
+2020-06-09 14:51:42.250 10765-10765/? D/BlePenManager_tag: SDK_VERSION :1.2.6 初始化成功
+2020-06-09 14:51:47.048 10765-10765/? D/BlePenStreamManager_tag: MSG_NOTIFY_WHAT: 1591685507048
+2020-06-09 14:51:47.135 10765-10797/? D/sunwei_tag: onDescriptorWrite: 01 00
+2020-06-09 14:51:47.281 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 94 0e 42 50 32 2d 39 4b 33 2d 30 31 5a 2d 45 4c c1
+2020-06-09 14:51:47.283 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 98 0a 64 63 f0 05 00 00 05 03 41 04 b4
+2020-06-09 14:51:47.301 10765-10765/? D/BlePenStreamManager_tag: handPenSyncNumData: BP2-9K3-01Z-EL
+2020-06-09 14:51:47.379 10765-10797/? D/TstudyBle__tag: onMtuChanged: 261
+2020-06-09 14:51:47.380 10765-10797/? D/_tag: onConnectionUpdated(): true
+2020-06-09 14:51:47.382 10765-10765/? D/BlePenManager_tag: onMtuChanged: 261
+2020-06-09 14:51:48.149 10765-10765/? D/BlePenStreamManager_tag: setStandMode: 021200FE
+2020-06-09 14:51:48.191 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 92 01 00 13
+2020-06-09 14:51:48.223 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 9f 96 01 2d 00 00 59 2a 96 04 0b 29 70 00 9b 02 00 06 0b 29 70 00 9b 02 00 06 0c 64 1c 29 09 28 04 96 1d 15 03 02 4e 11 03 01 cb 10 01 01 d2 10 01 01 e5 10 07 03 ee 10 f9 fe f6 10 02 01 66 15 01 00 78 11 03 0a 9a 11 0f 22 ac 11 14 38 e9 11 19 49 ef 11 11 2e ef 11 09 11 dd 11 01 03 ef 25 00 ff 32 15 fd fd 32 11 f9 f2 0f 13 00 00 00 00 09 2e 00 61 59 2a 96 04 0b 29 70 00 9b 02 00 06 0c 50 1d 4e 09 24 04 26 5e 15 00 04 84 11 04 ff 98 11 0a 00 b6 11 25 fd 63
+2020-06-09 14:51:48.225 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->0
+2020-06-09 14:51:48.238 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 9f 95 0c c2 11 c3 09 18 04 0c 19 3e b0 0a d5 03 96 22 12 30 f7 2e 12 19 fe 2e 12 0d 00 2b 12 02 00 31 12 fe ff 46 12 00 01 55 12 fe 01 49 12 01 00 5c 12 ff 02 78 16 00 0c 84 12 f8 3a 94 12 f8 50 9c 12 f8 3d 9c 12 fc 21 94 12 00 05 88 25 ff fe 64 10 fb fe 64 10 e6 f9 0f 1b 00 01 00 01 09 2f 00 00 5a 2a 96 04 0b 29 70 00 9b 02 00 06 0c f2 1c a5 09 2c 05 46 9e 15 04 fe da 11 1e f1 0d 12 2f ef 2b 12 58 e4 55 12 66 db 64 12 48 e4 60 12 1e f4 4f 12 02 00 c7
+2020-06-09 14:51:48.239 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:19    mFrameNum:19  failureCount0   errorCount0   notPageCount0
+2020-06-09 14:51:48.243 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->1
+2020-06-09 14:51:48.249 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:27    mFrameNum:27  failureCount1   errorCount0   notPageCount1
+2020-06-09 14:51:48.267 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 9f 96 14 dd 11 1a 0b a0 04 16 64 14 fd fe 64 14 ec f3 0f 0c 00 00 00 00 09 30 00 3b 5a 2a 96 04 0b 29 70 00 9b 02 00 06 0c d0 1c 12 0a b1 03 36 c5 11 fe 00 13 12 00 01 2e 12 02 02 37 12 02 02 43 16 06 0d 88 12 13 50 0c 7c 12 3e 0a bc 04 0c 94 16 4c 0a 56 05 4e 8c 12 10 62 88 12 09 36 88 12 08 20 94 12 04 0d 98 12 01 01 6c 12 fe fe 7c 11 ff ff a2 10 fe fe a2 10 f9 f0 0f 12 00 00 00 00 09 31 00 00 5b 2a 96 04 0b 29 70 00 9b 02 00 06 0c 96 1c 95 0c fa 02 72
+2020-06-09 14:51:48.268 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->2
+2020-06-09 14:51:48.270 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:12    mFrameNum:12  failureCount0   errorCount0   notPageCount0
+2020-06-09 14:51:48.274 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 9f 94 1c 5e 11 98 0c 00 03 56 c8 11 ff 04 13 12 fe 05 25 12 f2 14 49 12 dc 35 5c 12 d4 44 64 12 cc 50 e6 11 d3 40 64 10 ec 17 64 14 f0 03 64 10 f4 eb 0f 0c 00 00 00 00 09 32 00 3b 5b 2a 96 04 0b 29 70 00 9b 02 00 06 0c 9f 1c 15 0c b8 03 4e e2 10 07 05 b2 11 0c 10 0d 12 07 2b 40 12 00 3f 78 12 fe 45 da 11 00 34 e7 10 fe 30 b2 14 fd 0a b2 10 f6 e5 0f 0a 00 00 00 00 09 33 00 00 5c 2a 96 04 0b 29 70 00 9b 02 00 06 0c 84 1c 4a 0c 1c 04 0e d5 10 06 01 72
+2020-06-09 14:51:48.275 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:18    mFrameNum:18  failureCount0   errorCount0   notPageCount0
+2020-06-09 14:51:48.277 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->3
+2020-06-09 14:51:48.279 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 9f 28 24 80 11 55 0c 1a 04 46 bc 11 1c ef 22 12 41 dc 58 12 47 da 43 12 30 eb fe 11 19 f4 b9 14 05 fa b9 10 fc f9 b9 10 f2 ef eb
+2020-06-09 14:51:48.280 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:12    mFrameNum:12  failureCount0   errorCount0   notPageCount0
+2020-06-09 14:51:48.283 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:10    mFrameNum:10  failureCount0   errorCount0   notPageCount0
+2020-06-09 14:51:48.285 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->4
+2020-06-09 14:51:48.297 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 9f 94 2f 0b 00 00 00 00 09 34 00 36 5c 2a 96 04 0b 29 70 00 9b 02 00 06 0c be 1c f8 0c 30 03 8e a0 11 03 ff c0 11 01 05 ce 11 02 05 16 12 03 14 4f 12 04 3b 68 12 fc 54 6c 16 fe 41 7c 12 0b 2c 98 12 18 1d a0 12 24 0f b4 12 2c fb b4 12 2b eb 84 26 19 ea 84 12 ff 01 57 11 fe 00 57 15 f8 f8 57 15 ed f3 0f 13 00 01 00 00 09 35 00 00 5d 2a 96 04 0b 29 70 00 9b 02 00 06 0c aa 1d b9 0b 86 05 2e d7 11 07 fc 25 12 1b e8 2b 12 43 d9 43 12 63 d4 68 12 6d db a4
+2020-06-09 14:51:48.298 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->5
+2020-06-09 14:51:48.298 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:11    mFrameNum:11  failureCount0   errorCount0   notPageCount0
+2020-06-09 14:51:48.301 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:19    mFrameNum:19  failureCount1   errorCount0   notPageCount0
+2020-06-09 14:51:48.327 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 9f 92 34 78 12 3d 0d d8 04 3e 84 12 33 f0 8c 16 19 f7 68 12 06 fd 8e 11 ff ff 73 10 fd fd 73 10 ee f5 73 10 da ed 0f 0e 00 00 00 00 09 36 00 43 5d 2a 96 04 0b 29 70 00 9b 02 00 06 0c c0 1c b5 0c 27 04 46 7a 11 01 03 da 11 03 01 07 12 00 03 4f 16 ff 02 37 12 01 03 40 12 00 09 3a 12 ff 47 25 12 01 78 0c 43 12 bc 0c 7c 05 56 4f 12 09 65 5c 12 0a 43 68 12 05 2c 78 12 03 17 6c 12 00 08 7c 12 00 ff 3a 12 ff fe 64 10 00 fe 64 10 fa fb 64 10 da dc 92
+2020-06-09 14:51:48.327 10765-10797/? D/TstudyBle__tag: onCharacteristicChanged notify: 02 df 06 3f 14 00 00 00 00 56
+2020-06-09 14:51:48.327 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->6
+2020-06-09 14:51:48.328 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:14    mFrameNum:14  failureCount0   errorCount0   notPageCount0
+2020-06-09 14:51:48.331 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:mPackageNum--->7
+2020-06-09 14:51:48.331 10765-10765/? D/BlePenStreamManager_tag: handleCoordDataV2:  frameCount:20    mFrameNum:20  failureCount0   errorCount0   notPageCount0
