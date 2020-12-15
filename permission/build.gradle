@@ -1,128 +1,78 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.library'
+}
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.tstudy.blependemo"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
-            // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "false"
-            //混淆
-            minifyEnabled true
-            //Zipalign优化
-            zipAlignEnabled true
-
-            // 移除无用的resource文件
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            lintOptions {
-                disable 'MissingTranslation'
-            }
-            // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "false"
-            //混淆
             minifyEnabled false
-            //Zipalign优化
-            zipAlignEnabled false
-
-            // 移除无用的resource文件
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
     }
-
-    dataBinding {
-        enabled = true
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':webview')
-    implementation project(':permission')
+    //aop中的 aspectj框架
     implementation 'org.aspectj:aspectjrt:1.9.2'
+    api project(':base')
 }
 
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
-
 final def log = project.logger
-final def variants = project.android.applicationVariants
 
-variants.all { variant ->
-
+project.android.libraryVariants.all{ variant ->
     if (!variant.buildType.isDebuggable()) {
         log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
-        return;
+        return
     }
 
-    JavaCompile javaCompile = variant.javaCompile
-
+    JavaCompile javaCompile = variant.javaCompiler
     javaCompile.doLast {
-
         String[] args = ["-showWeaveInfo",
-
                          "-1.8",
-
                          "-inpath", javaCompile.destinationDir.toString(),
-
                          "-aspectpath", javaCompile.classpath.asPath,
-
                          "-d", javaCompile.destinationDir.toString(),
-
                          "-classpath", javaCompile.classpath.asPath,
-
                          "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
-
         log.debug "ajc args: " + Arrays.toString(args)
 
-        MessageHandler handler = new MessageHandler(true);
-
-        new Main().run(args, handler);
-
+        MessageHandler handler = new MessageHandler(true)
+        new Main().run(args, handler)
         for (IMessage message : handler.getMessages(null, true)) {
-
             switch (message.getKind()) {
-
                 case IMessage.ABORT:
-
                 case IMessage.ERROR:
-
                 case IMessage.FAIL:
-
                     log.error message.message, message.thrown
-
-                    break;
-
+                    break
                 case IMessage.WARNING:
-
                     log.warn message.message, message.thrown
-
-                    break;
-
+                    break
                 case IMessage.INFO:
-
                     log.info message.message, message.thrown
-
-                    break;
-
+                    break
                 case IMessage.DEBUG:
-
                     log.debug message.message, message.thrown
-
-                    break;
+                    break
             }
         }
     }

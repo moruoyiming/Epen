@@ -12,9 +12,11 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.permission.annotation.Permission;
+import com.example.permission.annotation.PermissionCancel;
+import com.example.permission.annotation.PermissionDenied;
 import com.example.webview.WebViewActivity;
 import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.callback.BleGattCallback;
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, "权限请求拒绝");
         setContentView(R.layout.activity_main);
         initView();
         mContext = MainActivity.this;
@@ -72,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //lib 日志开关 true 打开  默认false
         BlePenStreamManager.getInstance().enableLog(true);
-        SharedPreferencesUtil.getInstance(mContext).putSP("mode",String.valueOf(mode));
+        SharedPreferencesUtil.getInstance(mContext).putSP("mode", String.valueOf(mode));
     }
 
     @Override
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (!gpsIsOpen(mContext)) {
             ly_location_warn.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             ly_location_warn.setVisibility(View.GONE);
         }
 
@@ -134,10 +140,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                WebViewActivity.startCommonWeb(MainActivity.this,"xxx","https://www.baidu.com");
-
+//                WebViewActivity.startCommonWeb(MainActivity.this,"xxx","https://www.baidu.com");
                 if (btn_scan.getText().equals(getString(R.string.start_scan))) {
                     checkPermissions();
+
                 } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
                     BlePenStreamManager.getInstance().cancelScan();
                 }
@@ -186,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         BleScanCallback callback = new BleScanCallback() {
             @Override
             public void onScanStarted(boolean success) {
-                Log.d(TAG, "onScanStarted: "+success);
+                Log.d(TAG, "onScanStarted: " + success);
                 mDeviceAdapter.clearScanDevice();
                 mDeviceAdapter.notifyDataSetChanged();
                 img_loading.startAnimation(operatingAnim);
@@ -302,17 +308,18 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //如果 API level 是大于等于 23(Android 6.0) 时
             //判断是否具有权限
-            Log.d(TAG, "checkPermissions ACCESS_FINE_LOCATION: "+ ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
-            Log.d(TAG, "checkPermissions ACCESS_COARSE_LOCATION: "+ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION));
+            Log.d(TAG, "checkPermissions ACCESS_FINE_LOCATION: " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
+            Log.d(TAG, "checkPermissions ACCESS_COARSE_LOCATION: " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION));
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 //判断是否需要向用户解释为什么需要申请该权限
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
                     Toast.makeText(MainActivity.this, "自Android 6.0开始需要打开位置权限才可以搜索到Ble设备", Toast.LENGTH_LONG).show();
                 }
                 //请求权限
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_CODE_PERMISSION_LOCATION);
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{},
+//                        REQUEST_CODE_PERMISSION_LOCATION);
+                requestLocation();
             } else {
                 startScan();
             }
@@ -326,9 +333,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_OPEN_BT_CODE) {
             if (resultCode == RESULT_OK) {
-                checkPermissions();
+
             } else {
-                Toast.makeText(mContext, "拒绝蓝牙权限", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
@@ -350,12 +357,12 @@ public class MainActivity extends AppCompatActivity {
             case Menu.FIRST + 1:
                 //默认精简绘制模式-直接书写
                 mode = 0;
-                SharedPreferencesUtil.getInstance(mContext).putSP("mode",String.valueOf(mode));
+                SharedPreferencesUtil.getInstance(mContext).putSP("mode", String.valueOf(mode));
                 break;
             case Menu.FIRST + 2:
                 //接口调试模式-调试SDK接口
                 mode = 1;
-                SharedPreferencesUtil.getInstance(mContext).putSP("mode",String.valueOf(mode));
+                SharedPreferencesUtil.getInstance(mContext).putSP("mode", String.valueOf(mode));
                 break;
             case Menu.FIRST + 3:
                 //升级固件模式-笔端固件版本升级
@@ -365,6 +372,7 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
     private void onDialogShow() {
         new AlertDialog.Builder(this).setTitle("设置固件升级模式")
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -373,13 +381,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mode = 2;
-                        SharedPreferencesUtil.getInstance(mContext).putSP("mode",String.valueOf(mode));
+                        SharedPreferencesUtil.getInstance(mContext).putSP("mode", String.valueOf(mode));
                     }
                 })
                 .setNegativeButton("取消", null)
                 .show();
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -387,5 +396,28 @@ public class MainActivity extends AppCompatActivity {
             BlePenStreamManager.getInstance().disconnect(mBleDevice);
         }
     }
+
+    /**
+     * 这里写的要特别注意，denied方法，必须是带有一个int参数的方法，下面的也一样
+     *
+     * @param requestCode
+     */
+    @PermissionCancel
+    public void denied(int requestCode) {
+        Log.e(TAG, "权限请求拒绝");
+        Toast.makeText(mContext, "拒绝蓝牙权限", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionDenied
+    public void deniedForever(int requestCode) {
+        Log.e(TAG, "权限请求拒绝，用户永久拒绝");
+    }
+
+    @Permission(permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, requestCode = 1)
+    public void requestLocation() {
+        Log.i("Permission", "权限请求成功");
+        checkPermissions();
+    }
+
 
 }

@@ -43,5 +43,6 @@
     <string name="ota_update_success">OTA升级成功</string>
     <string name="ota_update_failure">OTA升级失败</string>
     <string name="ota_reconnect_failure">进入boot并重连失败，请开关笔重新连接更新笔端版本</string>
+    <string name="service_desc">service_descservice_descservice_descservice_desc</string>
 
 </resources>
