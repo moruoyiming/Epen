@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<license version="v1.0" id="5f891a184da52705065d32f4">
+    <owner>北京拓思德科技有限公司</owner>
+    <user>于敖</user>
+    <email>yua@tstudy.com.cn</email>
+    <bundleId>org.delta.epen</bundleId>
+    <appName>答教育科技（上海）有限公司安卓</appName>
+    <driverTypes>
+        <driverType>ANDROID</driverType>
+    </driverTypes>
+    <penTypes>
+        <penType penName="ADP_101" ID="5" />
+        <penType penName="EN_ADP_601" ID="6" />
+        <penType penName="EN_APD_611" ID="7" />
+        <penType penName="TE_301" ID="8" />
+        <penType penName="TE_302" ID="9" />
+        <penType penName="TD_102" ID="10" />
+    </penTypes>
+    <licensedDate>20201016</licensedDate>
+    <expiredDate>20221016</expiredDate>
+    <authId>5f891a134da52705065d32f3</authId>
+    <secret>IWtheHQoNWltY243dHp+eWRranhwfioqfmxsIXM1K3A=</secret>
+    <pageAddress start="70.0.17.0" end="70.0.17.19" pageCount="20" />
+    <authorizer company="北京拓思德科技有限公司" website="http://www.tstudy.com.cn" />
+    <signature value="958350180A45BB1FD72C4B2CD0C320C65B0F3A104040796C5BCA8F63E5B427C48901D6A30F35778468A0AC5534B88559768BB02984DA8F1D45AB5B15C50E7B72D36D49D072009B07745FCD05DD09C8F75CCEF62BB81388867D0061D291DAB80D9F9C53AF061CAEDB7BB41C39DD78514C5A94AF3E060F9AC860CE7DB8C749C890" />
+</license>
