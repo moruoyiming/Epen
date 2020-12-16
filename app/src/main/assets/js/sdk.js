@@ -10,6 +10,12 @@ sdk.addCallback = function(name,func,userdata){
     sdk.callbacks[name] = {callback:func,userdata:userdata};
 };
 
+//sdk.onBattery = function(para){
+//  param=JSON.parse(para);
+//  console.log("当前电量="+param.batteryPercent+"，当前内存="+param.memoryPercent);
+//  sdk.post("showToast", {message: "当前电量="+param.batteryPercent+"，当前内存="+param.memoryPercent});
+//}
+
 sdk.callback = function(para){
     var callbackobject = sdk.callbacks[para.callbackname];
     if (callbackobject !== undefined){
@@ -30,7 +36,8 @@ sdk.post = function(cmd,para){
    if(window.sdk.os.isAndroid){
         window.webview.post(cmd,JSON.stringify(para));
     }
-};
+}
+
 sdk.postWithCallback = function(cmd,para,callback,ud){
     var callbackname = sdk.callbackname();
     sdk.addCallback(callbackname,callback,ud);

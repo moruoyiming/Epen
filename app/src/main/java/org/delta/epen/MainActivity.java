@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                WebViewActivity.startCommonWeb(MainActivity.this,"xxx","https://www.baidu.com");
                 if (btn_scan.getText().equals(getString(R.string.start_scan))) {
                     checkPermissions();
                 } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
@@ -176,14 +175,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDetail(BleDevice bleDevice) {
+                Log.d(TAG, "initData: onDetail: " );
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
                     ToastUtils.showLong(R.string.connected);
                     //跳到绘制界面
-                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
-                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
-                    intent.putExtra(WebConstants.INTENT_TAG_TITLE, "AIDL测试");
-                    intent.putExtra(WebConstants.INTENT_TAG_URL, "file:///android_asset/" + "aidl.html");
-                    startActivity(intent);
+                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "aidl.html");
+//                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+//                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
+//                    startActivity(intent);
                 }
             }
         });
@@ -252,10 +251,11 @@ public class MainActivity extends AppCompatActivity {
                 mDeviceAdapter.addDevice(0, bleDevice);
                 mDeviceAdapter.notifyDataSetChanged();
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
-                    //跳到绘制界面
-                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
-                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
-                    startActivity(intent);
+//                    //跳到绘制界面
+//                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+//                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
+//                    startActivity(intent);
+                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "aidl.html");
                 }
             }
 

@@ -21,11 +21,13 @@
 <body style="height: 100%;">
 <script>
     function callAppToast() {
-        sdk.post("showToast", {message: "this is action from html"});
+<!--        sdk.post("showToast", {message: "this is action from html"});-->
+        GameSDK.showToast("this is action from html")
     }
 
     function callAppDialog() {
-        sdk.postWithCallback("showDialog",
+      GameSDK.showToast("this is action from html")
+        sdk.postWithCshowDialogallback("showDialog",
             {title: "Note", content: "This is web call native to show dialog." ,buttons:[{title:"confirm", id: "confirm"},{title:"cancel", id: "cancel"}]},function(paras) {
             if (paras.id == 'confirm') {
                 sdk.post("showToast", {message: "confirm"});
@@ -48,11 +50,20 @@
             sdk.post("showToast", {message: JSON.stringify(res)});
         });
     }
+
+  function registerCallback(){
+    GameSDK.setOnBatteryCB(function(res) {
+            console.log(JSON.stringify(res))
+            sdk.post("showToast", {message: JSON.stringify(res)});
+        })
+    }
 </script>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppToast()">调用: showToast</div>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppDialog()">调用: showDialog</div>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppDataProvider()">调用: appDataProvider</div>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callNewPager()">调用: newPage</div>
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="registerCallback()">调用: 注册函数</div>
 <script src="js/sdk.js" charset="utf-8"></script>
+<script src="js/GameSDK.js" charset="utf-8"></script>
 </body>
 </html>
