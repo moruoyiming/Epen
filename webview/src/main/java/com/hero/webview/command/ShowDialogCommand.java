@@ -7,13 +7,14 @@ import android.text.TextUtils;
 import androidx.appcompat.app.AlertDialog;
 
 
+import com.google.auto.service.AutoService;
 import com.hero.webview.CommandCallBack;
 import com.hero.webview.utils.WebConstants;
 import com.hero.webview.utils.WebUtils;
 
 import java.util.List;
 import java.util.Map;
-
+@AutoService({Command.class})
 public class ShowDialogCommand implements Command {
     @Override
     public String name() {

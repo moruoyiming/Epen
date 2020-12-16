@@ -26,5 +26,7 @@ android {
 }
 
 dependencies {
-    api project(':base')
+    annotationProcessor rootProject.ext.dependencies.googleAutoServiceDependency
+    implementation rootProject.ext.dependencies.googleAutoServiceDependency
+    implementation project(':base')
 }

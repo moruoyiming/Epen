@@ -3,6 +3,7 @@ package com.hero.webview.command;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.google.auto.service.AutoService;
 import com.hero.webview.CommandCallBack;
 import com.hero.webview.utils.AidlError;
 import com.hero.webview.utils.WebConstants;
@@ -10,6 +11,7 @@ import com.hero.webview.utils.WebConstants;
 import java.util.HashMap;
 import java.util.Map;
 
+@AutoService({Command.class})
 public class AccountLevelCommand implements Command {
 
     @Override

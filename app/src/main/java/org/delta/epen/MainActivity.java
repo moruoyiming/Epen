@@ -33,9 +33,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hero.basiclib.utils.ToastUtils;
 import com.hero.permission.annotation.Permission;
 import com.hero.permission.annotation.PermissionCancel;
 import com.hero.permission.annotation.PermissionDenied;
+import com.hero.webview.WebViewActivity;
+import com.hero.webview.utils.WebConstants;
 import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.callback.BleGattCallback;
 import com.tstudy.blepenlib.callback.BleScanCallback;
@@ -139,11 +142,9 @@ public class MainActivity extends AppCompatActivity {
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 //                WebViewActivity.startCommonWeb(MainActivity.this,"xxx","https://www.baidu.com");
                 if (btn_scan.getText().equals(getString(R.string.start_scan))) {
                     checkPermissions();
-
                 } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
                     BlePenStreamManager.getInstance().cancelScan();
                 }
@@ -176,9 +177,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDetail(BleDevice bleDevice) {
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
+                    ToastUtils.showLong(R.string.connected);
                     //跳到绘制界面
                     Intent intent = new Intent(MainActivity.this, DrawActivity.class);
                     intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
+                    intent.putExtra(WebConstants.INTENT_TAG_TITLE, "AIDL测试");
+                    intent.putExtra(WebConstants.INTENT_TAG_URL, "file:///android_asset/" + "aidl.html");
                     startActivity(intent);
                 }
             }

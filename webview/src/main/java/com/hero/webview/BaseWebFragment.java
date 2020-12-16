@@ -57,8 +57,8 @@ public abstract class BaseWebFragment extends Fragment implements WebViewCallBac
                 accountInfoHeaders = (HashMap<String, String>) bundle.getSerializable(ACCOUNT_INFO_HEADERS);
             }
         }
-        CommandsManager.getInstance().registerCommand(new ToastCommand());
-        CommandsManager.getInstance().registerCommand(new ShowDialogCommand());
+//        CommandsManager.getInstance().registerCommand(new ToastCommand());
+//        CommandsManager.getInstance().registerCommand(new ShowDialogCommand());
     }
 
     @Nullable
@@ -92,6 +92,10 @@ public abstract class BaseWebFragment extends Fragment implements WebViewCallBac
 
     protected void loadUrl() {
         binding.webView.loadUrl(webUrl);
+    }
+
+    public void CallJsMethod(String cmd,String params){
+        binding.webView.loadJS(cmd,params);
     }
 
     @Override

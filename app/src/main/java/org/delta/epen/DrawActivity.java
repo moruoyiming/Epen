@@ -1,6 +1,5 @@
 package org.delta.epen;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +9,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -20,6 +21,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +29,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.hero.webview.BaseWebFragment;
+import com.hero.webview.CommandCallBack;
+import com.hero.webview.WebViewActivity;
+import com.hero.webview.WebViewFragment;
+import com.hero.webview.command.Command;
+import com.hero.webview.command.CommandsManager;
+import com.hero.webview.databinding.ActivityCommonWebBinding;
+import com.hero.webview.utils.WebConstants;
 import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.callback.BleCheckVersionCallback;
 import com.tstudy.blepenlib.callback.BlePenStreamCallback;
@@ -35,12 +49,22 @@ import com.tstudy.blepenlib.callback.BleUpdateCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.data.CoordinateInfo;
 import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
+
 import org.delta.epen.R;
+import org.delta.epen.databinding.ActivityDrawBindingImpl;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 import static com.tstudy.blepenlib.constant.Constant.PEN_COODINAT_MESSAGE;
 import static com.tstudy.blepenlib.constant.Constant.PEN_DOWN_MESSAGE;
@@ -51,7 +75,7 @@ import static com.tstudy.blepenlib.constant.Constant.WARN_MEMORY;
 /**
  * Created by sunwei on 2018/7/7 0007.
  */
-public class DrawActivity extends Activity {
+public class DrawActivity extends AppCompatActivity {
 
     public static final String KEY_DATA = "DEVICE_DATA";
     public static final String KEY_MODE = "DEVICE_MODE";
@@ -89,7 +113,6 @@ public class DrawActivity extends Activity {
     private CanvasFrame canvasFrame;
     private LinearLayout layout_update;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +124,7 @@ public class DrawActivity extends Activity {
         initData();
         initListener();
         initBle();
+        startTime();
     }
 
     private void initView() {
@@ -142,7 +166,7 @@ public class DrawActivity extends Activity {
                 freeDrawLayout.setLayoutParams(params);
                 canvasFrame = new CanvasFrame(mContext);
                 mStrokeView = canvasFrame.bDrawl;
-                Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.a51).copy(Bitmap.Config.ARGB_4444,true);
+                Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.a51).copy(Bitmap.Config.ARGB_4444, true);
                 canvasFrame.bDrawl.setSignatureBitmap(bmp);
 
                 freeDrawLayout.addView(canvasFrame);
@@ -351,6 +375,8 @@ public class DrawActivity extends Activity {
 
             @Override
             public void onRemainBatteryAndMemory(final int batteryPercent, final int memoryPercent, final int byteNum) {
+                Log.d(TAG, "每隔五分钟调用一次  onRemainBatteryAndMemory: " + batteryPercent);
+                //TODO 通知H5
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -362,6 +388,7 @@ public class DrawActivity extends Activity {
 
             @Override
             public void onCoordDraw(final CoordinateInfo coordinateInfo) {
+                //TODO 绘制图像
                 /**
                  * 输出离线数据坐标信息
                  * @param state down/move/up
@@ -513,7 +540,6 @@ public class DrawActivity extends Activity {
     }
 
 
-
     class MyHandle extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -581,10 +607,52 @@ public class DrawActivity extends Activity {
                 .setNegativeButton("取消", null)
                 .show();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         BlePenStreamManager.getInstance().disconnect(bleDevice);
+        closeTimer();
+    }
+
+    private Disposable mDisposable;
+
+    /**
+     * 启动定时器
+     */
+    public void startTime() {
+        Observable.interval(1,  TimeUnit.MINUTES)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mDisposable = d;
+                    }
+
+                    @Override
+                    public void onNext(Long value) {
+                        BlePenStreamManager.getInstance().getPenInfo();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        closeTimer();
+                    }
+                });
+    }
+
+    /**
+     * 关闭定时器
+     */
+    public void closeTimer() {
+        if (mDisposable != null) {
+            mDisposable.dispose();
+        }
     }
 
 }

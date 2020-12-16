@@ -4,10 +4,11 @@ import android.content.Context;
 import android.widget.Toast;
 
 
+import com.google.auto.service.AutoService;
 import com.hero.webview.CommandCallBack;
 
 import java.util.Map;
-
+@AutoService({Command.class})
 public class ToastCommand implements Command {
     @Override
     public String name() {

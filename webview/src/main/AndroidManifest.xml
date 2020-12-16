@@ -2,13 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hero.webview">
 
-
     <application android:usesCleartextTraffic="true">//9.0 打开
         <activity
             android:name="com.hero.webview.WebViewActivity"
             android:hardwareAccelerated="true"
+            android:process=":remoteweb"
             android:theme="@style/WebviewTheme" />
 
+        <service
+            android:name="com.hero.webview.remoteprocessservice.OptimizationService"
+            android:process=":remoteweb" />
+
+        <service android:name="com.hero.webview.mainprocess.MainProHandleRemoteService" />
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

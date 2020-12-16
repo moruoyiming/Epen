@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.auto.service.AutoService;
 import com.hero.webview.command.Command;
 import com.hero.webview.command.CommandsManager;
 import com.hero.webview.databinding.ActivityCommonWebBinding;
@@ -68,6 +69,10 @@ public class WebViewActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
+    }
+
+    public void CallJsMethod(String cmd,String params){
+        webviewFragment.CallJsMethod(cmd,params);
     }
 
     @Override
