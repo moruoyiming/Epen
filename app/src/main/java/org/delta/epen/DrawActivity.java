@@ -30,18 +30,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.hero.webview.BaseWebFragment;
-import com.hero.webview.CommandCallBack;
-import com.hero.webview.WebViewActivity;
-import com.hero.webview.WebViewFragment;
-import com.hero.webview.command.Command;
-import com.hero.webview.command.CommandsManager;
-import com.hero.webview.databinding.ActivityCommonWebBinding;
-import com.hero.webview.utils.WebConstants;
 import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.callback.BleCheckVersionCallback;
 import com.tstudy.blepenlib.callback.BlePenStreamCallback;
@@ -50,15 +38,10 @@ import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.data.CoordinateInfo;
 import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
 
-import org.delta.epen.R;
-import org.delta.epen.databinding.ActivityDrawBindingImpl;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;

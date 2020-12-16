@@ -94,7 +94,7 @@ public abstract class BaseWebFragment extends Fragment implements WebViewCallBac
         binding.webView.loadUrl(webUrl);
     }
 
-    public void CallJsMethod(String cmd,String params){
+    public void CallJsMethod(String cmd,Object params){
         binding.webView.loadJS(cmd,params);
     }
 

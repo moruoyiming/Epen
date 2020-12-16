@@ -16,18 +16,19 @@
             background-color: #999999;
             margin-top: 20px;
         }
+
+
+
     </style>
 </head>
 <body style="height: 100%;">
 <script>
     function callAppToast() {
-<!--        sdk.post("showToast", {message: "this is action from html"});-->
-        GameSDK.showToast("this is action from html")
+        sdk.post("showToast", {message: "this is action from html"});
     }
 
     function callAppDialog() {
-      GameSDK.showToast("this is action from html")
-        sdk.postWithCshowDialogallback("showDialog",
+        sdk.postWithCallback("showDialog",
             {title: "Note", content: "This is web call native to show dialog." ,buttons:[{title:"confirm", id: "confirm"},{title:"cancel", id: "cancel"}]},function(paras) {
             if (paras.id == 'confirm') {
                 sdk.post("showToast", {message: "confirm"});
@@ -51,19 +52,32 @@
         });
     }
 
-  function registerCallback(){
-    GameSDK.setOnBatteryCB(function(res) {
-            console.log(JSON.stringify(res))
-            sdk.post("showToast", {message: JSON.stringify(res)});
-        })
+    function registerCallback(){
+
+              sdk.addCallback("onBattery",function(paras){
+                 console.log("callbackname="+paras.callbackname+", 电量="+paras.batteryPercent+", 内存="+paras.memoryPercent)
+              },{message: JSON.stringify("22222")});
+
+               sdk.addCallback("onDraw",function(paras){
+                 console.log("callbackname="+paras.callbackname+", x="+paras.coordX+", y="+paras.coordY+ "  force=" + paras.coordForce +
+                                "  pageAddress=" + paras.pageAddress + "  time=" + paras.timeLong + "  stroke=" + paras.strokeNum + "  state=" + paras.state)
+              },{message: JSON.stringify("22222")});
     }
+
+
+
 </script>
-<div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppToast()">调用: showToast</div>
-<div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppDialog()">调用: showDialog</div>
-<div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppDataProvider()">调用: appDataProvider</div>
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="registerCallback()">调用: 注册函数
+</div>
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppToast()">调用: showToast
+</div>
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppDialog()">调用: showDialog
+</div>
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppDataProvider()">调用:
+    appDataProvider
+</div>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callNewPager()">调用: newPage</div>
-<div class="item" style="font-size: 20px; color: #ffffff" onclick="registerCallback()">调用: 注册函数</div>
+
 <script src="js/sdk.js" charset="utf-8"></script>
-<script src="js/GameSDK.js" charset="utf-8"></script>
 </body>
 </html>

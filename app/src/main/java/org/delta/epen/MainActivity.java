@@ -142,11 +142,12 @@ public class MainActivity extends AppCompatActivity {
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btn_scan.getText().equals(getString(R.string.start_scan))) {
-                    checkPermissions();
-                } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
-                    BlePenStreamManager.getInstance().cancelScan();
-                }
+                WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试","file:///android_asset/" + "aidl.html");
+//                if (btn_scan.getText().equals(getString(R.string.start_scan))) {
+//                    checkPermissions();
+//                } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
+//                    BlePenStreamManager.getInstance().cancelScan();
+//                }
             }
         });
         img_loading = (ImageView) findViewById(R.id.img_loading);

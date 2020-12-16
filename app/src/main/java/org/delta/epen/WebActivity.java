@@ -19,7 +19,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.gson.Gson;
 import com.hero.webview.BaseWebFragment;
 import com.hero.webview.CommandCallBack;
 import com.hero.webview.WebViewFragment;
@@ -101,7 +100,7 @@ public class WebActivity extends AppCompatActivity {
         startTime();
     }
 
-    public void CallJsMethod(String cmd, String params) {
+    public void CallJsMethod(String cmd, Object params) {
         webviewFragment.CallJsMethod(cmd, params);
     }
 
@@ -139,8 +138,8 @@ public class WebActivity extends AppCompatActivity {
         if (intent != null) {
             bleDevice = intent.getParcelableExtra(KEY_DATA);
             int mode = Integer.parseInt(SharedPreferencesUtil.getInstance(WebActivity.this).getSP("mode"));
-            mBleDeviceName = bleDevice.getName();
-            Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
+//            mBleDeviceName = bleDevice.getName();
+//            Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
             title = intent.getStringExtra(WebConstants.INTENT_TAG_TITLE);
             url = intent.getStringExtra(WebConstants.INTENT_TAG_URL);
             showBar = intent.getBooleanExtra(WebConstants.INTENT_TAG_IS_SHOW_ACTION_BAR, false);
@@ -176,9 +175,10 @@ public class WebActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         HashMap<String,String> hashMap=new HashMap<>();
+                        hashMap.put("callbackname","onBattery");
                         hashMap.put("batteryPercent",String.valueOf(batteryPercent));
                         hashMap.put("memoryPercent",String.valueOf(memoryPercent));
-                        CallJsMethod("onBattery",new Gson().toJson(hashMap));
+                        CallJsMethod("onBattery",hashMap);
                     }
                 });
             }
@@ -220,7 +220,10 @@ public class WebActivity extends AppCompatActivity {
 
                         Log.d("onCoordDrawMessage_tag", "onCoordDraw: x=" + coordinateInfo.coordX + "  y=" + coordinateInfo.coordY + "  force=" + coordinateInfo.coordForce +
                                 "  pageAddress=" + coordinateInfo.pageAddress + "  time=" + coordinateInfo.timeLong + "  stroke=" + coordinateInfo.strokeNum + "  state=" + writeString);
-//                        CallJsMethod();
+                        DrawInfo coordinateInfo2 = new DrawInfo(coordinateInfo.state,coordinateInfo.pageAddress,
+                                coordinateInfo.coordX,coordinateInfo.coordY,coordinateInfo.coordForce,coordinateInfo.strokeNum,coordinateInfo.timeLong,false,32,3);
+                        coordinateInfo2.setCallbackname("onDraw");
+                        CallJsMethod("onDraw",coordinateInfo2);
                     }
                 });
 
@@ -332,6 +335,15 @@ public class WebActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Long value) {
                         BlePenStreamManager.getInstance().getPenInfo();
+//                        HashMap<String,String> hashMap=new HashMap<>();
+//                        hashMap.put("callbackname","onBattery");
+//                        hashMap.put("batteryPercent",String.valueOf(20));
+//                        hashMap.put("memoryPercent",String.valueOf(30));
+//                        CallJsMethod("onBattery",hashMap);
+//                        DrawInfo coordinateInfo = new DrawInfo(2,"xdsd",
+//                                21,21,12,12,21,false,32,3);
+//                        coordinateInfo.setCallbackname("onDraw");
+//                        CallJsMethod("onDraw",coordinateInfo);
                     }
 
                     @Override
