@@ -37,15 +37,12 @@ import com.hero.basiclib.utils.ToastUtils;
 import com.hero.permission.annotation.Permission;
 import com.hero.permission.annotation.PermissionCancel;
 import com.hero.permission.annotation.PermissionDenied;
-import com.hero.webview.WebViewActivity;
-import com.hero.webview.utils.WebConstants;
 import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.callback.BleGattCallback;
 import com.tstudy.blepenlib.callback.BleScanCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.exception.BleException;
 import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
-import org.delta.epen.R;
 
 import java.util.List;
 
@@ -142,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试","file:///android_asset/" + "aidl.html");
+//                WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试","file:///android_asset/" + "demo.html");
                 if (btn_scan.getText().equals(getString(R.string.start_scan))) {
                     checkPermissions();
                 } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
@@ -180,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
                     ToastUtils.showLong(R.string.connected);
                     //跳到绘制界面
-                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "aidl.html");
+                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "demo.html");
 //                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
 //                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
 //                    startActivity(intent);
@@ -256,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
 //                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
 //                    startActivity(intent);
-                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "aidl.html");
+                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "demo.html");
                 }
             }
 

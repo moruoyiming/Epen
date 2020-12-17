@@ -155,7 +155,7 @@ public class WebActivity extends AppCompatActivity {
         }
 
     }
-
+    HashMap<String,String> hashMap=new HashMap<>();
     private void initListener() {
         mBlePenStreamCallback = new BlePenStreamCallback() {
             @Override
@@ -220,17 +220,17 @@ public class WebActivity extends AppCompatActivity {
 
                         Log.d("onCoordDrawMessage_tag", "onCoordDraw: x=" + coordinateInfo.coordX + "  y=" + coordinateInfo.coordY + "  force=" + coordinateInfo.coordForce +
                                 "  pageAddress=" + coordinateInfo.pageAddress + "  time=" + coordinateInfo.timeLong + "  stroke=" + coordinateInfo.strokeNum + "  state=" + writeString);
-
-                        HashMap<String,String> hashMap=new HashMap<>();
-                        hashMap.put("callbackname","onDraw");
-                        hashMap.put("state",String.valueOf(coordinateInfo.state));
-                        hashMap.put("pageAddress",String.valueOf(coordinateInfo.pageAddress));
-                        hashMap.put("coordX",String.valueOf(coordinateInfo.coordX));
-                        hashMap.put("coordY",String.valueOf(coordinateInfo.coordY));
-                        hashMap.put("force",String.valueOf(coordinateInfo.coordForce));
-                        hashMap.put("timeLong",String.valueOf(coordinateInfo.timeLong));
-                        hashMap.put("stroke",String.valueOf(coordinateInfo.strokeNum));
-                        CallJsMethod("onDraw",hashMap);
+                        if(hashMap!=null){
+                            hashMap.put("callbackname","onDraw");
+                            hashMap.put("state",String.valueOf(coordinateInfo.state));
+                            hashMap.put("pageAddress",String.valueOf(coordinateInfo.pageAddress));
+                            hashMap.put("coordX",String.valueOf(coordinateInfo.coordX));
+                            hashMap.put("coordY",String.valueOf(coordinateInfo.coordY));
+                            hashMap.put("force",String.valueOf(coordinateInfo.coordForce));
+                            hashMap.put("timeLong",String.valueOf(coordinateInfo.timeLong));
+                            hashMap.put("stroke",String.valueOf(coordinateInfo.strokeNum));
+                            CallJsMethod("onDraw",hashMap);
+                        }
                     }
                 });
 
