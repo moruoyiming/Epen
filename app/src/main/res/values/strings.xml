@@ -44,5 +44,6 @@
     <string name="ota_update_failure">OTA升级失败</string>
     <string name="ota_reconnect_failure">进入boot并重连失败，请开关笔重新连接更新笔端版本</string>
     <string name="service_desc">service_descservice_descservice_descservice_desc</string>
-
+    <string name="start_url">编辑网址</string>
+    <string name="hide_url">请输入url地址，默认启动demo.html</string>
 </resources>

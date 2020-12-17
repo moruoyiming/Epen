@@ -342,15 +342,6 @@ public class WebActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Long value) {
                         BlePenStreamManager.getInstance().getPenInfo();
-//                        HashMap<String,String> hashMap=new HashMap<>();
-//                        hashMap.put("callbackname","onBattery");
-//                        hashMap.put("batteryPercent",String.valueOf(20));
-//                        hashMap.put("memoryPercent",String.valueOf(30));
-//                        CallJsMethod("onBattery",hashMap);
-//                        DrawInfo coordinateInfo = new DrawInfo(2,"xdsd",
-//                                21,21,12,12,21,false,32,3);
-//                        coordinateInfo.setCallbackname("onDraw");
-//                        CallJsMethod("onDraw",coordinateInfo);
                     }
 
                     @Override

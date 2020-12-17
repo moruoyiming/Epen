@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +26,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_OPEN_GPS = 1;
     private static final int REQUEST_CODE_PERMISSION_LOCATION = 2;
     private static final int REQUEST_OPEN_BT_CODE = 3;
-    private Button btn_scan;
+    private Button btn_scan, btn_url, select;
     private ImageView img_loading;
     private Animation operatingAnim;
     private DeviceAdapter mDeviceAdapter;
@@ -64,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
     private int mode;
     private BluetoothAdapter mBluetoothAdapter;
     private RelativeLayout ly_location_warn;
+    private LinearLayout linearLayout;
+    private EditText editText;
+    private String url = "file:///android_asset/demo.html";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,18 +139,42 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_OPEN_GPS);
             }
         });
-
+        btn_url = findViewById(R.id.btn_ed);
         btn_scan = (Button) findViewById(R.id.btn_scan);
         btn_scan.setText(getString(R.string.start_scan));
 
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试","file:///android_asset/" + "demo.html");
+//                WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试",);
                 if (btn_scan.getText().equals(getString(R.string.start_scan))) {
                     checkPermissions();
                 } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
                     BlePenStreamManager.getInstance().cancelScan();
+                }
+            }
+        });
+        linearLayout = findViewById(R.id.config_url);
+        btn_url.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (linearLayout.getVisibility() == View.VISIBLE) {
+                    linearLayout.setVisibility(View.GONE);
+                } else {
+                    linearLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        editText = findViewById(R.id.et_location);
+        select=findViewById(R.id.select);
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(TextUtils.isEmpty(editText.getText().toString())){
+                    Toast.makeText(MainActivity.this,"请输入地址信息！",Toast.LENGTH_LONG).show();
+                }else{
+                    url = editText.getText().toString();
+                    Toast.makeText(MainActivity.this,"保存成功！",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -173,11 +204,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDetail(BleDevice bleDevice) {
-                Log.d(TAG, "initData: onDetail: " );
+                Log.d(TAG, "initData: onDetail: ");
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
-                    ToastUtils.showLong(R.string.connected);
+                    Toast.makeText(MainActivity.this,R.string.connected,Toast.LENGTH_LONG).show();
                     //跳到绘制界面
-                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "demo.html");
+                    WebActivity.startCommonWeb(MainActivity.this, bleDevice, "AIDL测试", url);
 //                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
 //                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
 //                    startActivity(intent);
@@ -244,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
+                Toast.makeText(MainActivity.this,R.string.connected,Toast.LENGTH_LONG).show();
                 mBleDevice = bleDevice;
                 progressDialog.dismiss();
                 mDeviceAdapter.addDevice(0, bleDevice);
@@ -253,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
 //                    intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
 //                    startActivity(intent);
-                    WebActivity.startCommonWeb(MainActivity.this,bleDevice,"AIDL测试","file:///android_asset/" + "demo.html");
+                    WebActivity.startCommonWeb(MainActivity.this, bleDevice, "AIDL测试", url);
                 }
             }
 
