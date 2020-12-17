@@ -138,8 +138,8 @@ public class WebActivity extends AppCompatActivity {
         if (intent != null) {
             bleDevice = intent.getParcelableExtra(KEY_DATA);
             int mode = Integer.parseInt(SharedPreferencesUtil.getInstance(WebActivity.this).getSP("mode"));
-//            mBleDeviceName = bleDevice.getName();
-//            Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
+            mBleDeviceName = bleDevice.getName();
+            Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
             title = intent.getStringExtra(WebConstants.INTENT_TAG_TITLE);
             url = intent.getStringExtra(WebConstants.INTENT_TAG_URL);
             showBar = intent.getBooleanExtra(WebConstants.INTENT_TAG_IS_SHOW_ACTION_BAR, false);
@@ -220,10 +220,17 @@ public class WebActivity extends AppCompatActivity {
 
                         Log.d("onCoordDrawMessage_tag", "onCoordDraw: x=" + coordinateInfo.coordX + "  y=" + coordinateInfo.coordY + "  force=" + coordinateInfo.coordForce +
                                 "  pageAddress=" + coordinateInfo.pageAddress + "  time=" + coordinateInfo.timeLong + "  stroke=" + coordinateInfo.strokeNum + "  state=" + writeString);
-                        DrawInfo coordinateInfo2 = new DrawInfo(coordinateInfo.state,coordinateInfo.pageAddress,
-                                coordinateInfo.coordX,coordinateInfo.coordY,coordinateInfo.coordForce,coordinateInfo.strokeNum,coordinateInfo.timeLong,false,32,3);
-                        coordinateInfo2.setCallbackname("onDraw");
-                        CallJsMethod("onDraw",coordinateInfo2);
+
+                        HashMap<String,String> hashMap=new HashMap<>();
+                        hashMap.put("callbackname","onDraw");
+                        hashMap.put("state",String.valueOf(coordinateInfo.state));
+                        hashMap.put("pageAddress",String.valueOf(coordinateInfo.pageAddress));
+                        hashMap.put("coordX",String.valueOf(coordinateInfo.coordX));
+                        hashMap.put("coordY",String.valueOf(coordinateInfo.coordY));
+                        hashMap.put("force",String.valueOf(coordinateInfo.coordForce));
+                        hashMap.put("timeLong",String.valueOf(coordinateInfo.timeLong));
+                        hashMap.put("stroke",String.valueOf(coordinateInfo.strokeNum));
+                        CallJsMethod("onDraw",hashMap);
                     }
                 });
 

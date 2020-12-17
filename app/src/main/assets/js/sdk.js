@@ -7,12 +7,15 @@ sdk.callbackname = function(){
 sdk.callbacks = {};
 sdk.addCallback = function(name,func,userdata){
     delete sdk.callbacks[name];
+//    console.log("addCallback name="+name+"  func= "+func);
     sdk.callbacks[name] = {callback:func,userdata:userdata};
 
 };
 
 sdk.callback = function(para){
+//    console.log("callback  para "+para.callbackname);
     var callbackobject = sdk.callbacks[para.callbackname];
+//    console.log("callback  para "+callbackobject);
     if (callbackobject !== undefined){
         if (callbackobject.userdata !== undefined){
             callbackobject.userdata.callbackData = para;
@@ -22,7 +25,7 @@ sdk.callback = function(para){
             if(ret === false){
                 return
             }
-            delete sdk.callbacks[para.callbackname];
+//            delete sdk.callbacks[para.callbackname];
         }
     }
 };

@@ -114,7 +114,7 @@ public class BaseWebView extends WebView implements XiangxueWebviewClient.Webvie
     }
 
     public void loadJS(String cmd,Object param) {
-        Log.i("chromium", "loadJS  cmd="+cmd +" param="+ param);
+        Log.i("CallJsMethos", "loadJS  cmd="+cmd +" param="+ new Gson().toJson(param));
         String trigger = "javascript:sdk.callback" + "("+ new Gson().toJson(param) + ")";
         evaluateJavascript(trigger, null);
     }
