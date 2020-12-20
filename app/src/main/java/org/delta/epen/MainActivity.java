@@ -36,7 +36,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.hero.basiclib.utils.ToastUtils;
 import com.hero.permission.annotation.Permission;
 import com.hero.permission.annotation.PermissionCancel;
 import com.hero.permission.annotation.PermissionDenied;
@@ -75,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "权限请求拒绝");
         setContentView(R.layout.activity_main);
         initView();
         mContext = MainActivity.this;
@@ -259,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStartConnect() {
                 progressDialog.setMessage("正在连接蓝牙点阵笔:" + bleDevice.getName());
-
                 progressDialog.show();
             }
 
@@ -363,18 +360,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_OPEN_BT_CODE) {
-            if (resultCode == RESULT_OK) {
-
-            } else {
-
-            }
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(Menu.NONE, Menu.FIRST + 1, 0, "精简绘制模式");
@@ -450,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
     @Permission(permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, requestCode = 1)
     public void requestLocation() {
         Log.i("Permission", "权限请求成功");
-        checkPermissions();
+        startScan();
     }
 
 

@@ -65,7 +65,7 @@
 -keep public class com.android.vending.licensing.ILicensingService
 #如果有引用v4包可以添加下面这行
 -keep public class * extends android.support.v4.app.Fragment
-
+-keep public class * extends androidx.appcompat.app.AppCompatActivity
 
 #忽略警告
 #-ignorewarning
