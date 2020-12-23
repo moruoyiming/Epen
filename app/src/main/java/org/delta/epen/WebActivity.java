@@ -254,14 +254,14 @@ public class WebActivity extends AppCompatActivity {
             @Override
             public void onVersionAndserialNumber(String hardVersion, final String softVersion, String serialNumber) {
                 final String msg = "hardVersion：" + hardVersion + "  softVersion:" + softVersion + "   serialNumber:" + serialNumber;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!TextUtils.isEmpty(softVersion)) {
-                            Toast.makeText(WebActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (!TextUtils.isEmpty(softVersion)) {
+//                            Toast.makeText(WebActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
             }
 
 
@@ -275,7 +275,7 @@ public class WebActivity extends AppCompatActivity {
 //                    BlePenStreamManager.getInstance().setPenRTC(timeMillis);
                 }
                 String formatTime = simpleDateFormat.format(new Date(penTime));
-                Toast.makeText(WebActivity.this, formatTime, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(WebActivity.this, formatTime, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCurrentTime: " + formatTime);
             }
         };

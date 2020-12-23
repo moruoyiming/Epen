@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
@@ -132,6 +133,7 @@ public class ProgressWebChromeClient extends WebChromeClient {
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+        Log.i("consolemessage","consoleMessage="+consoleMessage.message());
         return super.onConsoleMessage(consoleMessage);
     }
 }
