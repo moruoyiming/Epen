@@ -106,13 +106,14 @@ public class WebActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (webviewFragment != null && webviewFragment instanceof BaseWebFragment) {
-            boolean flag = webviewFragment.onKeyDown(keyCode, event);
-            if (flag) {
-                return flag;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
+        return true;
+//        if (webviewFragment != null && webviewFragment instanceof BaseWebFragment) {
+//            boolean flag = webviewFragment.onKeyDown(keyCode, event);
+//            if (flag) {
+//                return flag;
+//            }
+//        }
+//        return super.onKeyDown(keyCode, event);
     }
 
     @Override
