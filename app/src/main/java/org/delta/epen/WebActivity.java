@@ -65,7 +65,7 @@ public class WebActivity extends AppCompatActivity {
     private boolean showBar;
     private ActivityCommonWeb2Binding binding;
     private BaseWebFragment webviewFragment;
-
+    private HashMap<String, String> hashMap = new HashMap<>();
     public static final String KEY_DATA = "DEVICE_DATA";
     public static final String KEY_MODE = "DEVICE_MODE";
     private BleDevice bleDevice;
@@ -75,7 +75,7 @@ public class WebActivity extends AppCompatActivity {
     private String writeString;
     private final int MAG_SCAN = 1;
     private MyHandle mHandle;
-
+    private RecordDialog.onConnectedListener onConnectedListener;
     public static void startCommonWeb(Context context, BleDevice bleDevice, String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
         intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
@@ -93,6 +93,19 @@ public class WebActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         CommandsManager.getInstance().registerCommand(titleUpdateCommand);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_common_web2);
+        onConnectedListener = new RecordDialog.onConnectedListener() {
+            @Override
+            public void onConnected(BleDevice ble) {
+                Log.d(TAG, "onConnected: " + ble);
+                bleDevice=ble;
+                initBle();
+            }
+
+            @Override
+            public void onDisConnected() {
+                showRecordDialog();
+            }
+        };
         mHandle = new MyHandle();
         initData();
         initListener();
@@ -106,14 +119,14 @@ public class WebActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return true;
-//        if (webviewFragment != null && webviewFragment instanceof BaseWebFragment) {
-//            boolean flag = webviewFragment.onKeyDown(keyCode, event);
-//            if (flag) {
-//                return flag;
-//            }
-//        }
-//        return super.onKeyDown(keyCode, event);
+//        return true;
+        if (webviewFragment != null && webviewFragment instanceof BaseWebFragment) {
+            boolean flag = webviewFragment.onKeyDown(keyCode, event);
+            if (flag) {
+                return flag;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -156,7 +169,7 @@ public class WebActivity extends AppCompatActivity {
         }
 
     }
-    HashMap<String,String> hashMap=new HashMap<>();
+
     private void initListener() {
         mBlePenStreamCallback = new BlePenStreamCallback() {
             @Override
@@ -175,11 +188,11 @@ public class WebActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        HashMap<String,String> hashMap=new HashMap<>();
-                        hashMap.put("callbackname","onBattery");
-                        hashMap.put("batteryPercent",String.valueOf(batteryPercent));
-                        hashMap.put("memoryPercent",String.valueOf(memoryPercent));
-                        CallJsMethod("onBattery",hashMap);
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("callbackname", "onBattery");
+                        hashMap.put("batteryPercent", String.valueOf(batteryPercent));
+                        hashMap.put("memoryPercent", String.valueOf(memoryPercent));
+                        CallJsMethod("onBattery", hashMap);
                     }
                 });
             }
@@ -221,16 +234,16 @@ public class WebActivity extends AppCompatActivity {
 
                         Log.d("onCoordDrawMessage_tag", "onCoordDraw: x=" + coordinateInfo.coordX + "  y=" + coordinateInfo.coordY + "  force=" + coordinateInfo.coordForce +
                                 "  pageAddress=" + coordinateInfo.pageAddress + "  time=" + coordinateInfo.timeLong + "  stroke=" + coordinateInfo.strokeNum + "  state=" + writeString);
-                        if(hashMap!=null){
-                            hashMap.put("callbackname","onDraw");
-                            hashMap.put("state",String.valueOf(coordinateInfo.state));
-                            hashMap.put("pageAddress",String.valueOf(coordinateInfo.pageAddress));
-                            hashMap.put("coordX",String.valueOf(coordinateInfo.coordX));
-                            hashMap.put("coordY",String.valueOf(coordinateInfo.coordY));
-                            hashMap.put("force",String.valueOf(coordinateInfo.coordForce));
-                            hashMap.put("timeLong",String.valueOf(coordinateInfo.timeLong));
-                            hashMap.put("stroke",String.valueOf(coordinateInfo.strokeNum));
-                            CallJsMethod("onDraw",hashMap);
+                        if (hashMap != null) {
+                            hashMap.put("callbackname", "onDraw");
+                            hashMap.put("state", String.valueOf(coordinateInfo.state));
+                            hashMap.put("pageAddress", String.valueOf(coordinateInfo.pageAddress));
+                            hashMap.put("coordX", String.valueOf(coordinateInfo.coordX));
+                            hashMap.put("coordY", String.valueOf(coordinateInfo.coordY));
+                            hashMap.put("force", String.valueOf(coordinateInfo.coordForce));
+                            hashMap.put("timeLong", String.valueOf(coordinateInfo.timeLong));
+                            hashMap.put("stroke", String.valueOf(coordinateInfo.strokeNum));
+                            CallJsMethod("onDraw", hashMap);
                         }
                     }
                 });
@@ -327,6 +340,7 @@ public class WebActivity extends AppCompatActivity {
     }
 
     private Disposable mDisposable;
+    private RecordDialog recordDialog;
 
     /**
      * 启动定时器
@@ -342,7 +356,12 @@ public class WebActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Long value) {
-                        BlePenStreamManager.getInstance().getPenInfo();
+                        if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
+                            BlePenStreamManager.getInstance().getPenInfo();
+                        } else {
+//                            showRecordDialog();
+                        }
+
                     }
 
                     @Override
@@ -357,6 +376,19 @@ public class WebActivity extends AppCompatActivity {
                 });
     }
 
+    public void showRecordDialog() {
+        if (recordDialog != null && recordDialog.isShowing()) {
+            return;
+        }
+        Log.i("weww",onConnectedListener.toString());
+        recordDialog = new RecordDialog
+                .Builder(WebActivity.this)
+                .setOnConnectedListener(onConnectedListener)
+                .build();
+        recordDialog.setCancelable(false);
+        recordDialog.show();
+    }
+
     /**
      * 关闭定时器
      */
@@ -365,4 +397,9 @@ public class WebActivity extends AppCompatActivity {
             mDisposable.dispose();
         }
     }
+
+    public RecordDialog.onConnectedListener getOnConnectedListener() {
+        return onConnectedListener;
+    }
+
 }

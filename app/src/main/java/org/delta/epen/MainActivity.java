@@ -1,6 +1,7 @@
 package org.delta.epen;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private EditText editText;
     private String url = "file:///android_asset/demo.html";
-
+    private RecordDialog.onConnectedListener onConnectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,15 +165,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         editText = findViewById(R.id.et_location);
-        select=findViewById(R.id.select);
+        select = findViewById(R.id.select);
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(TextUtils.isEmpty(editText.getText().toString())){
-                    Toast.makeText(MainActivity.this,"请输入地址信息！",Toast.LENGTH_LONG).show();
-                }else{
+                if (TextUtils.isEmpty(editText.getText().toString())) {
+                    Toast.makeText(MainActivity.this, "请输入地址信息！", Toast.LENGTH_LONG).show();
+                } else {
                     url = editText.getText().toString();
-                    Toast.makeText(MainActivity.this,"保存成功！",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "保存成功！", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -204,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDetail(BleDevice bleDevice) {
                 Log.d(TAG, "initData: onDetail: ");
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
-                    Toast.makeText(MainActivity.this,R.string.connected,Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, R.string.connected, Toast.LENGTH_LONG).show();
                     //跳到绘制界面
                     WebActivity.startCommonWeb(MainActivity.this, bleDevice, "AIDL测试", url);
 //                    Intent intent = new Intent(MainActivity.this, DrawActivity.class);
@@ -272,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                Toast.makeText(MainActivity.this,R.string.connected,Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, R.string.connected, Toast.LENGTH_LONG).show();
                 mBleDevice = bleDevice;
                 progressDialog.dismiss();
                 mDeviceAdapter.addDevice(0, bleDevice);
@@ -297,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(MainActivity.this, disConnectedMes, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onDisConnected: " + disConnectedMes);
+                showRecordDialog();
 
             }
         };
@@ -438,5 +440,21 @@ public class MainActivity extends AppCompatActivity {
         startScan();
     }
 
+    RecordDialog recordDialog;
 
+    public void showRecordDialog() {
+        if (recordDialog != null && recordDialog.isShowing()) {
+            return;
+        }
+        Activity activity = ActivityStack.takeInstance();
+        if(activity instanceof WebActivity){
+            onConnectedListener=((WebActivity) activity).getOnConnectedListener();
+        }
+        recordDialog = new RecordDialog
+                .Builder(activity)
+                .setOnConnectedListener(onConnectedListener)
+                .build();
+        recordDialog.setCancelable(false);
+        recordDialog.show();
+    }
 }

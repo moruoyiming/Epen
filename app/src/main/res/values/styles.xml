@@ -6,5 +6,13 @@
         <item name="colorPrimary">@color/material_grey_800</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="vs_dialog" parent="@android:style/Theme.Dialog">
+        <!--<item name="android:windowFrame">@null</item>&lt;!&ndash;边框&ndash;&gt;-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <!--<item name="android:windowNoTitle">true</item>&lt;!&ndash;无标题&ndash;&gt;-->
+        <item name="android:windowBackground">#00000000</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">true</item><!--模糊-->
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

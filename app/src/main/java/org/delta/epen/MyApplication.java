@@ -17,6 +17,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        ActivityStack.init(this);
         LoadSir.beginBuilder()
                 .addCallback(new ErrorCallback())//添加各种状态页
                 .addCallback(new EmptyCallback())
