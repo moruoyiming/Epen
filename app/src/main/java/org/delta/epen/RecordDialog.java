@@ -111,14 +111,12 @@ public class RecordDialog extends Dialog {
 
         public Builder setOnConnectedListener(RecordDialog.onConnectedListener onConnectedListener) {
             this.onConnectedListener = onConnectedListener;
-            Log.i("weww",this.onConnectedListener.toString());
             return this;
         }
 
         public RecordDialog build() {
             RecordDialog recordDialog = new RecordDialog(context, R.style.vs_dialog);
             recordDialog.setOnConnectedListener(onConnectedListener);
-            Log.i("weww",recordDialog.onConnectedListener.toString());
             return recordDialog;
         }
 
@@ -144,7 +142,6 @@ public class RecordDialog extends Dialog {
                 mDeviceAdapter.notifyDataSetChanged();
                 Log.d(TAG, "onConnectSuccess: " + BlePenStreamManager.getInstance().isConnected(bleDevice) + "   " + bleDevice);
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
-                    Log.i("weww",onConnectedListener.toString());
                     if (onConnectedListener != null) {
                         onConnectedListener.onConnected(bleDevice);
                     }
@@ -207,17 +204,4 @@ public class RecordDialog extends Dialog {
         void onDisConnected();
     }
 
-    RecordDialog recordDialog;
-
-    public void showRecordDialog() {
-        if (recordDialog != null && recordDialog.isShowing()) {
-            return;
-        }
-        Activity activity = ActivityStack.takeInstance();
-        recordDialog = new RecordDialog
-                .Builder(activity)
-                .build();
-        recordDialog.setCancelable(false);
-        recordDialog.show();
-    }
 }

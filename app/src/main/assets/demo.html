@@ -62,8 +62,17 @@
                  console.log("callbackname="+paras.callbackname+", x="+paras.coordX+", y="+paras.coordY+ "  force=" + paras.coordForce +
                                 "  pageAddress=" + paras.pageAddress + "  time=" + paras.timeLong + "  stroke=" + paras.strokeNum + "  state=" + paras.state)
               },{message: JSON.stringify("12121")});
-    }
 
+              sdk.addCallback("onInitBle",function(paras){// status = 0 未连接，status  = 1 已连接 status = 2 已断开 status = 3 开启写模式
+               console.log("paras status = 蓝牙连接状态 "+paras.status)
+              });
+    }
+    function callCheckBle() {
+        sdk.postWithCallback("initBle", {type: "account"}, function(res) {
+            console.log(JSON.stringify(res))
+            sdk.post("showToast", {message: JSON.stringify(res)});
+        });
+    }
 
 
 </script>
@@ -77,6 +86,8 @@
     appDataProvider
 </div>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callNewPager()">调用: newPage</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callCheckBle()">调用: initBle</div>
 
 <script src="js/sdk.js" charset="utf-8"></script>
 </body>

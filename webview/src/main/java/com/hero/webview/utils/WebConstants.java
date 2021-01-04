@@ -21,6 +21,16 @@ public class WebConstants {
     public static final String INTENT_TAG_IS_SHOW_ACTION_BAR = "is_show_action_bar";
     public static final String INTENT_TAG_CAN_NATIVE_REFRESH = "can_native_refresh";
 
+    public static final String INIT_BLE ="initBle";
+    public static final String ON_INIT_BLE="onInitBle";
+    public static final String ON_BATTERY="onBattery";
+    public static final String ON_DRAW="onDraw";
+
+    public static final int BLE_STATUS_NORMAL=0 ;
+    public static final int BLE_STATUS_CONNECTED=1 ;
+    public static final int BLE_STATUS_DISCONNECTED=2 ;
+    public static final int BLE_STATUS_OPEN_STREAM=3 ;
+
     public static final String COMMAND_UPDATE_TITLE = "xiangxue_webview_update_title";
     public static final String COMMAND_UPDATE_TITLE_PARAMS_TITLE = "xiangxue_webview_update_title_params_title";
 

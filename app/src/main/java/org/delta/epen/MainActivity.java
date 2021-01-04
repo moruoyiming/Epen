@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_OPEN_GPS = 1;
     private static final int REQUEST_CODE_PERMISSION_LOCATION = 2;
     private static final int REQUEST_OPEN_BT_CODE = 3;
-    private Button btn_scan, btn_url, select;
+    private Button btn_scan, btn_url, select,btn_jump;
     private ImageView img_loading;
     private Animation operatingAnim;
     private DeviceAdapter mDeviceAdapter;
@@ -69,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout ly_location_warn;
     private LinearLayout linearLayout;
     private EditText editText;
+//    private String url = "http://14.18.63.234:9024";
     private String url = "file:///android_asset/demo.html";
-    private RecordDialog.onConnectedListener onConnectedListener;
+//    private RecordDialog.onConnectedListener onConnectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,11 +142,9 @@ public class MainActivity extends AppCompatActivity {
         btn_url = findViewById(R.id.btn_ed);
         btn_scan = (Button) findViewById(R.id.btn_scan);
         btn_scan.setText(getString(R.string.start_scan));
-
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试",);
                 if (btn_scan.getText().equals(getString(R.string.start_scan))) {
                     checkPermissions();
                 } else if (btn_scan.getText().equals(getString(R.string.stop_scan))) {
@@ -175,6 +174,13 @@ public class MainActivity extends AppCompatActivity {
                     url = editText.getText().toString();
                     Toast.makeText(MainActivity.this, "保存成功！", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+        btn_jump= findViewById(R.id.btn_jump);
+        btn_jump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试",url);
             }
         });
         img_loading = (ImageView) findViewById(R.id.img_loading);
@@ -298,8 +304,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(MainActivity.this, disConnectedMes, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onDisConnected: " + disConnectedMes);
-                showRecordDialog();
-
+//                showRecordDialog();
             }
         };
         BlePenStreamManager.getInstance().connect(bleDevice.getMac(), bleGattCallback);
@@ -439,22 +444,22 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Permission", "权限请求成功");
         startScan();
     }
-
-    RecordDialog recordDialog;
-
-    public void showRecordDialog() {
-        if (recordDialog != null && recordDialog.isShowing()) {
-            return;
-        }
-        Activity activity = ActivityStack.takeInstance();
-        if(activity instanceof WebActivity){
-            onConnectedListener=((WebActivity) activity).getOnConnectedListener();
-        }
-        recordDialog = new RecordDialog
-                .Builder(activity)
-                .setOnConnectedListener(onConnectedListener)
-                .build();
-        recordDialog.setCancelable(false);
-        recordDialog.show();
-    }
+//
+//    RecordDialog recordDialog;
+//
+//    public void showRecordDialog() {
+//        if (recordDialog != null && recordDialog.isShowing()) {
+//            return;
+//        }
+//        Activity activity = ActivityStack.takeInstance();
+//        if(activity instanceof WebActivity){
+//            onConnectedListener=((WebActivity) activity).getOnConnectedListener();
+//        }
+//        recordDialog = new RecordDialog
+//                .Builder(activity)
+//                .setOnConnectedListener(onConnectedListener)
+//                .build();
+//        recordDialog.setCancelable(false);
+//        recordDialog.show();
+//    }
 }

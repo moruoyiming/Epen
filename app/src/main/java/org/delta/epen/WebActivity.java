@@ -1,5 +1,6 @@
 package org.delta.epen;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.hero.permission.annotation.Permission;
+import com.hero.permission.annotation.PermissionCancel;
+import com.hero.permission.annotation.PermissionDenied;
 import com.hero.webview.BaseWebFragment;
 import com.hero.webview.CommandCallBack;
 import com.hero.webview.WebViewFragment;
@@ -75,6 +80,7 @@ public class WebActivity extends AppCompatActivity {
     private final int MAG_SCAN = 1;
     private MyHandle mHandle;
     private RecordDialog.onConnectedListener onConnectedListener;
+
     public static void startCommonWeb(Context context, BleDevice bleDevice, String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
         intent.putExtra(DrawActivity.KEY_DATA, bleDevice);
@@ -91,69 +97,19 @@ public class WebActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        CommandsManager.getInstance().registerCommand(titleUpdateCommand);
+        CommandsManager.getInstance().registerCommand(checkBle);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_common_web2);
-        onConnectedListener = new RecordDialog.onConnectedListener() {
-            @Override
-            public void onConnected(BleDevice ble) {
-                Log.d(TAG, "onConnected: " + ble);
-                bleDevice=ble;
-                initBle();
-            }
-
-            @Override
-            public void onDisConnected() {
-                showRecordDialog();
-            }
-        };
         mHandle = new MyHandle();
         initData();
         initListener();
-        initBle();
+        openPenStream();
         startTime();
     }
 
-    public void CallJsMethod(String cmd, Object params) {
-        webviewFragment.CallJsMethod(cmd, params);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        return true;
-        if (webviewFragment != null && webviewFragment instanceof BaseWebFragment) {
-            boolean flag = webviewFragment.onKeyDown(keyCode, event);
-            if (flag) {
-                return flag;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void initBle() {
-        if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
-            isConnectedNow = true;
-            //开启笔输出流
-            BlePenStreamManager.getInstance().openPenStream(bleDevice, mBlePenStreamCallback);
-            mHandle.removeMessages(MAG_SCAN);
-        }
-    }
 
     private void initData() {
         Intent intent = getIntent();
         if (intent != null) {
-            bleDevice = intent.getParcelableExtra(KEY_DATA);
-            int mode = Integer.parseInt(SharedPreferencesUtil.getInstance(WebActivity.this).getSP("mode"));
-            mBleDeviceName = bleDevice.getName();
-            Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
             title = intent.getStringExtra(WebConstants.INTENT_TAG_TITLE);
             url = intent.getStringExtra(WebConstants.INTENT_TAG_URL);
             showBar = intent.getBooleanExtra(WebConstants.INTENT_TAG_IS_SHOW_ACTION_BAR, false);
@@ -161,9 +117,17 @@ public class WebActivity extends AppCompatActivity {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction transaction = fm.beginTransaction();
             webviewFragment = null;
-            webviewFragment = WebViewFragment.newInstance(url, (HashMap<String, String>) getIntent().getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS), true);
+            webviewFragment = WebViewFragment.newInstance(url, (HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS), true);
             transaction.replace(com.hero.webview.R.id.web_view_fragment, webviewFragment).commit();
             setTitle(title);
+            bleDevice = intent.getParcelableExtra(KEY_DATA);
+            int mode = Integer.parseInt(SharedPreferencesUtil.getInstance(WebActivity.this).getSP("mode"));
+            if (bleDevice != null) {
+                mBleDeviceName = bleDevice.getName();
+                Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
+            } else {
+                initBlePen();
+            }
         } else {
             Log.d(TAG, "initData: intent null  bleDevice null");
         }
@@ -175,6 +139,7 @@ public class WebActivity extends AppCompatActivity {
             @Override
             public void onOpenPenStreamStatus(boolean openSuccess, String message) {
                 if (openSuccess) {
+                    checkBle(WebConstants.BLE_STATUS_OPEN_STREAM);
                     BlePenStreamManager.getInstance().setStandMode();
                     Log.d(TAG, "onOpenPenStreamSuccess: ");
                 } else {
@@ -189,10 +154,10 @@ public class WebActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("callbackname", "onBattery");
+                        hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_BATTERY);
                         hashMap.put("batteryPercent", String.valueOf(batteryPercent));
                         hashMap.put("memoryPercent", String.valueOf(memoryPercent));
-                        CallJsMethod("onBattery", hashMap);
+                        CallJsMethod(WebConstants.ON_BATTERY, hashMap);
                     }
                 });
             }
@@ -235,7 +200,7 @@ public class WebActivity extends AppCompatActivity {
                         Log.d("onCoordDrawMessage_tag", "onCoordDraw: x=" + coordinateInfo.coordX + "  y=" + coordinateInfo.coordY + "  force=" + coordinateInfo.coordForce +
                                 "  pageAddress=" + coordinateInfo.pageAddress + "  time=" + coordinateInfo.timeLong + "  stroke=" + coordinateInfo.strokeNum + "  state=" + writeString);
                         if (hashMap != null) {
-                            hashMap.put("callbackname", "onDraw");
+                            hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_DRAW);
                             hashMap.put("state", String.valueOf(coordinateInfo.state));
                             hashMap.put("pageAddress", String.valueOf(coordinateInfo.pageAddress));
                             hashMap.put("coordX", String.valueOf(coordinateInfo.coordX));
@@ -243,7 +208,7 @@ public class WebActivity extends AppCompatActivity {
                             hashMap.put("force", String.valueOf(coordinateInfo.coordForce));
                             hashMap.put("timeLong", String.valueOf(coordinateInfo.timeLong));
                             hashMap.put("stroke", String.valueOf(coordinateInfo.strokeNum));
-                            CallJsMethod("onDraw", hashMap);
+                            CallJsMethod(WebConstants.ON_DRAW, hashMap);
                         }
                     }
                 });
@@ -268,14 +233,7 @@ public class WebActivity extends AppCompatActivity {
             @Override
             public void onVersionAndserialNumber(String hardVersion, final String softVersion, String serialNumber) {
                 final String msg = "hardVersion：" + hardVersion + "  softVersion:" + softVersion + "   serialNumber:" + serialNumber;
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (!TextUtils.isEmpty(softVersion)) {
-//                            Toast.makeText(WebActivity.this, msg, Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+                Log.d(TAG, "onVersionAndserialNumber: " + msg);
             }
 
 
@@ -284,35 +242,60 @@ public class WebActivity extends AppCompatActivity {
                 //如果与当前系统时间差一分钟以上，可以同步笔端时间
                 long timeMillis = System.currentTimeMillis();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS", Locale.CHINA);
-
                 if (Math.abs(penTime - timeMillis) > 1000 * 60) {
 //                    BlePenStreamManager.getInstance().setPenRTC(timeMillis);
                 }
                 String formatTime = simpleDateFormat.format(new Date(penTime));
-//                Toast.makeText(WebActivity.this, formatTime, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCurrentTime: " + formatTime);
             }
         };
 
+        onConnectedListener = new RecordDialog.onConnectedListener() {
+            @Override
+            public void onConnected(BleDevice ble) {
+                Log.d(TAG, "onConnected: " + ble);
+                bleDevice = ble;
+                mBleDeviceName = bleDevice.getName();
+                checkBle(WebConstants.BLE_STATUS_CONNECTED);
+                openPenStream();
+            }
 
+            @Override
+            public void onDisConnected() {
+                checkBle(WebConstants.BLE_STATUS_DISCONNECTED);
+                showRecordDialog();
+            }
+        };
     }
 
-    /**
-     * 页面路由
-     */
-    private final Command titleUpdateCommand = new Command() {
-        @Override
-        public String name() {
-            return WebConstants.COMMAND_UPDATE_TITLE;
+    private void initBlePen() {
+        boolean initSuccess = BlePenStreamManager.getInstance().init(getApplication(), MyLicense.getBytes());
+        if (!initSuccess) {
+            Toast.makeText(this, "初始化失败，请到开放平台申请授权或检查设备是否支持蓝牙BLE", Toast.LENGTH_LONG).show();
         }
+        //lib 日志开关 true 打开  默认false
+        BlePenStreamManager.getInstance().enableLog(true);
+    }
 
-        @Override
-        public void exec(Context context, Map params, CommandCallBack resultBack) {
-            if (params.containsKey(WebConstants.COMMAND_UPDATE_TITLE_PARAMS_TITLE)) {
-                setTitle((String) params.get(WebConstants.COMMAND_UPDATE_TITLE_PARAMS_TITLE));
+    private void checkBle(int status) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_INIT_BLE);
+                hashMap.put("status", String.valueOf(status));
+                CallJsMethod(WebConstants.ON_INIT_BLE, hashMap);
             }
+        });
+    }
+
+    private void openPenStream() {
+        if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
+            isConnectedNow = true;
+            BlePenStreamManager.getInstance().openPenStream(bleDevice, mBlePenStreamCallback);
+            mHandle.removeMessages(MAG_SCAN);
         }
-    };
+    }
 
     class MyHandle extends Handler {
         @Override
@@ -335,8 +318,35 @@ public class WebActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BlePenStreamManager.getInstance().disconnect(bleDevice);
+        if (bleDevice != null) {
+            boolean isConnected = BlePenStreamManager.getInstance().isConnected(bleDevice);
+            if (isConnected) {
+                BlePenStreamManager.getInstance().disconnect(bleDevice);
+            }
+        }
         closeTimer();
+    }
+
+    /**
+     * 这里写的要特别注意，denied方法，必须是带有一个int参数的方法，下面的也一样
+     *
+     * @param requestCode
+     */
+    @PermissionCancel
+    public void denied(int requestCode) {
+        Log.e(TAG, "权限请求拒绝");
+        Toast.makeText(WebActivity.this, "拒绝蓝牙权限", Toast.LENGTH_SHORT).show();
+    }
+
+    @PermissionDenied
+    public void deniedForever(int requestCode) {
+        Log.e(TAG, "权限请求拒绝，用户永久拒绝");
+    }
+
+    @Permission(permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, requestCode = 1)
+    public void requestPermission() {
+        Log.i("Permission", "权限请求成功");
+        showRecordDialog();
     }
 
     private Disposable mDisposable;
@@ -358,10 +368,7 @@ public class WebActivity extends AppCompatActivity {
                     public void onNext(Long value) {
                         if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
                             BlePenStreamManager.getInstance().getPenInfo();
-                        } else {
-//                            showRecordDialog();
                         }
-
                     }
 
                     @Override
@@ -376,19 +383,6 @@ public class WebActivity extends AppCompatActivity {
                 });
     }
 
-    public void showRecordDialog() {
-        if (recordDialog != null && recordDialog.isShowing()) {
-            return;
-        }
-        Log.i("weww",onConnectedListener.toString());
-        recordDialog = new RecordDialog
-                .Builder(WebActivity.this)
-                .setOnConnectedListener(onConnectedListener)
-                .build();
-        recordDialog.setCancelable(false);
-        recordDialog.show();
-    }
-
     /**
      * 关闭定时器
      */
@@ -398,8 +392,59 @@ public class WebActivity extends AppCompatActivity {
         }
     }
 
-    public RecordDialog.onConnectedListener getOnConnectedListener() {
-        return onConnectedListener;
+    public void showRecordDialog() {
+        if (recordDialog != null && recordDialog.isShowing()) {
+            return;
+        }
+        recordDialog = new RecordDialog
+                .Builder(WebActivity.this)
+                .setOnConnectedListener(onConnectedListener)
+                .build();
+        recordDialog.setCancelable(false);
+        recordDialog.show();
     }
 
+
+    private Command checkBle = new Command() {
+        @Override
+        public String name() {
+            return WebConstants.INIT_BLE;
+        }
+
+        @Override
+        public void exec(Context context, Map params, CommandCallBack callBack) {
+            Log.i("wwws", params.toString());
+            checkBle(WebConstants.BLE_STATUS_NORMAL);
+            requestPermission();
+        }
+    };
+
+
+    public void CallJsMethod(String cmd, Object params) {
+        webviewFragment.CallJsMethod(cmd, params);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (recordDialog != null && recordDialog.isShowing()) {
+            recordDialog.dismiss();
+            return true;
+        }
+        if (webviewFragment != null) {
+            boolean flag = webviewFragment.onKeyDown(keyCode, event);
+            if (flag) {
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
