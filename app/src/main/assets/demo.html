@@ -67,7 +67,7 @@
                console.log("paras status = 蓝牙连接状态 "+paras.status)
               });
     }
-    function callCheckBle() {
+    function callInitBle() {
         sdk.postWithCallback("initBle", {type: "account"}, function(res) {
             console.log(JSON.stringify(res))
             sdk.post("showToast", {message: JSON.stringify(res)});
@@ -87,7 +87,7 @@
 </div>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callNewPager()">调用: newPage</div>
 
-<div class="item" style="font-size: 20px; color: #ffffff" onclick="callCheckBle()">调用: initBle</div>
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callInitBle()">调用: initBle</div>
 
 <script src="js/sdk.js" charset="utf-8"></script>
 </body>
