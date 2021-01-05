@@ -22,6 +22,7 @@ public class WebConstants {
     public static final String INTENT_TAG_CAN_NATIVE_REFRESH = "can_native_refresh";
 
     public static final String INIT_BLE ="initBle";
+    public static final String BATTERY_INFO ="getBattery";
     public static final String ON_INIT_BLE="onInitBle";
     public static final String ON_BATTERY="onBattery";
     public static final String ON_DRAW="onDraw";

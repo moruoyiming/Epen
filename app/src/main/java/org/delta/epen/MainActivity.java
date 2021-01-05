@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private EditText editText;
 //    private String url2 = "file:///android_asset/demo.html";
-//    private String url2 = "http://14.18.63.234:9024";
-    private String url = "file:///android_asset/demo.html";
+    private String url = "http://14.18.63.234:9024";
+//    private String url = "file:///android_asset/demo.html";
 //    private RecordDialog.onConnectedListener onConnectedListener;
 
     @Override
