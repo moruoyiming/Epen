@@ -262,6 +262,8 @@ public class WebActivity extends AppCompatActivity {
 
             @Override
             public void onDisConnected() {
+                bleDevice = null;
+                mBleDeviceName = null;
                 checkBle(WebConstants.BLE_STATUS_DISCONNECTED);
                 showRecordDialog();
             }
@@ -413,9 +415,12 @@ public class WebActivity extends AppCompatActivity {
 
         @Override
         public void exec(Context context, Map params, CommandCallBack callBack) {
-            Log.i("wwws", params.toString());
-            checkBle(WebConstants.BLE_STATUS_NORMAL);
-            requestPermission();
+            if (!BlePenStreamManager.getInstance().isConnected(bleDevice)) {
+                checkBle(WebConstants.BLE_STATUS_NORMAL);
+                requestPermission();
+            } else {
+                checkBle(WebConstants.BLE_STATUS_CONNECTED);
+            }
         }
     };
 

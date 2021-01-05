@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout ly_location_warn;
     private LinearLayout linearLayout;
     private EditText editText;
-//    private String url = "http://14.18.63.234:9024";
+//    private String url2 = "file:///android_asset/demo.html";
+    private String url2 = "http://14.18.63.234:9024";
     private String url = "file:///android_asset/demo.html";
 //    private RecordDialog.onConnectedListener onConnectedListener;
 
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         btn_jump.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试",url);
+               WebActivity.startCommonWeb(MainActivity.this,null,"AIDL测试",url2);
             }
         });
         img_loading = (ImageView) findViewById(R.id.img_loading);
