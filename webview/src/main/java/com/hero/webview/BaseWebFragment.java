@@ -101,7 +101,7 @@ public abstract class BaseWebFragment extends Fragment implements WebViewCallBac
     @Override
     public void onResume() {
         super.onResume();
-        binding.webView.dispatchEvent("pageResume");
+//        binding.webView.dispatchEvent("pageResume");
         binding.webView.onResume();
     }
 
@@ -139,20 +139,20 @@ public abstract class BaseWebFragment extends Fragment implements WebViewCallBac
     @Override
     public void onPause() {
         super.onPause();
-        binding.webView.dispatchEvent("pagePause");
+//        binding.webView.dispatchEvent("pagePause");
         binding.webView.onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        binding.webView.dispatchEvent("pageStop");
+//        binding.webView.dispatchEvent("pageStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding.webView.dispatchEvent("pageDestroy");
+//        binding.webView.dispatchEvent("pageDestroy");
         clearWebView(binding.webView);
     }
 
