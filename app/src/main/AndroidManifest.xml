@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="org.delta.epen.MainActivity"
+            android:name="org.delta.epen.WebActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,11 +37,11 @@
             android:name="org.delta.epen.DrawActivity"
             android:screenOrientation="landscape" />
 
-        <activity
-            android:name=".WebActivity"
-            android:screenOrientation="landscape"
-          >
-        </activity>
+<!--        <activity-->
+<!--            android:name=".WebActivity"-->
+<!--            android:screenOrientation="landscape"-->
+<!--          >-->
+<!--        </activity>-->
 
         <receiver android:name="org.delta.epen.BootReceiver">
             <intent-filter>

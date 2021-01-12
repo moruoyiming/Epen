@@ -79,7 +79,7 @@ public class WebActivity extends AppCompatActivity {
     private String writeString;
     private final int MAG_SCAN = 1;
     private MyHandle mHandle;
-    private RecordDialog.onConnectedListener onConnectedListener;
+    private BleDialogFragment.onConnectedListener onConnectedListener;
 
     public static void startCommonWeb(Context context, BleDevice bleDevice, String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
@@ -116,6 +116,7 @@ public class WebActivity extends AppCompatActivity {
         if (intent != null) {
             title = intent.getStringExtra(WebConstants.INTENT_TAG_TITLE);
             url = intent.getStringExtra(WebConstants.INTENT_TAG_URL);
+            url="http://14.18.63.234:9024";
             showBar = intent.getBooleanExtra(WebConstants.INTENT_TAG_IS_SHOW_ACTION_BAR, false);
             binding.actionBars.setVisibility(showBar ? View.VISIBLE : View.GONE);
             FragmentManager fm = getSupportFragmentManager();
@@ -210,6 +211,7 @@ public class WebActivity extends AppCompatActivity {
                             hashMap.put("coordX", String.valueOf(coordinateInfo.coordX));
                             hashMap.put("coordY", String.valueOf(coordinateInfo.coordY));
                             hashMap.put("force", String.valueOf(coordinateInfo.coordForce));
+                            hashMap.put("isOFFLine", String.valueOf(coordinateInfo.isOFFLine));
                             hashMap.put("timeLong", String.valueOf(coordinateInfo.timeLong));
                             hashMap.put("stroke", String.valueOf(coordinateInfo.strokeNum));
                             CallJsMethod(WebConstants.ON_DRAW, hashMap);
@@ -254,7 +256,7 @@ public class WebActivity extends AppCompatActivity {
             }
         };
 
-        onConnectedListener = new RecordDialog.onConnectedListener() {
+        onConnectedListener = new BleDialogFragment.onConnectedListener() {
             @Override
             public void onConnected(BleDevice ble) {
                 Log.d(TAG, "onConnected: " + ble);
@@ -357,7 +359,6 @@ public class WebActivity extends AppCompatActivity {
     }
 
     private Disposable mDisposable;
-    private RecordDialog recordDialog;
 
     /**
      * 启动定时器
@@ -410,6 +411,7 @@ public class WebActivity extends AppCompatActivity {
 //        recordDialog.setCancelable(false);
 //        recordDialog.show();
         BleDialogFragment editNameDialog = new BleDialogFragment();
+        editNameDialog.setOnConnectedListener(onConnectedListener);
         editNameDialog.show(getSupportFragmentManager(), "EditNameDialog");
     }
 
@@ -438,10 +440,10 @@ public class WebActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (recordDialog != null && recordDialog.isShowing()) {
-            recordDialog.dismiss();
-            return true;
-        }
+//        if (recordDialog != null && recordDialog.isShowing()) {
+//            recordDialog.dismiss();
+//            return true;
+//        }
         if (webviewFragment != null) {
             boolean flag = webviewFragment.onKeyDown(keyCode, event);
             if (flag) {

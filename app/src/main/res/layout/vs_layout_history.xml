@@ -2,11 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:gravity="center"
     android:layout_height="wrap_content"
     android:background="@color/white">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_height="wrap_content">
 
         <TextView
@@ -34,24 +38,26 @@
             android:textStyle="bold">
 
         </TextView>
-        <Button
+        <TextView
             android:id="@+id/btn_scan"
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:padding="5dp"
             android:background="@drawable/bg_btn"
             android:layout_below="@id/tv_details"
-            android:padding="5dp"
             android:text="@string/start_scan"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="158dp"
             android:layout_below="@+id/btn_scan"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="29dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
             <ListView
@@ -61,8 +67,6 @@
                 android:layout_marginTop="10dp"
                 android:divider="@color/colorPrimary"
                 android:dividerHeight="1dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
                 android:scrollbars="none" />
 
         </LinearLayout>
@@ -72,7 +76,6 @@
             android:layout_alignParentEnd="true"
             android:layout_width="25dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_height="25dp"
             android:background="@mipmap/ic_close"
             >
