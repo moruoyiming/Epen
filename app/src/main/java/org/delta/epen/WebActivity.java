@@ -64,9 +64,9 @@ import static com.tstudy.blepenlib.constant.Constant.WARN_MEMORY;
  */
 public class WebActivity extends AppCompatActivity {
     private static final String TAG = "Battery";
-    private String title;
+//    private String title;
     private String url;
-    private boolean showBar;
+//    private boolean showBar;
     private ActivityCommonWeb2Binding binding;
     private BaseWebFragment webviewFragment;
     private HashMap<String, String> hashMap = new HashMap<>();
@@ -112,30 +112,31 @@ public class WebActivity extends AppCompatActivity {
 
 
     private void initData() {
-        Intent intent = getIntent();
-        if (intent != null) {
-            title = intent.getStringExtra(WebConstants.INTENT_TAG_TITLE);
-            url = intent.getStringExtra(WebConstants.INTENT_TAG_URL);
+//        Intent intent = getIntent();
+//        if (intent != null) {
+//            title = intent.getStringExtra(WebConstants.INTENT_TAG_TITLE);
+//            url = intent.getStringExtra(WebConstants.INTENT_TAG_URL);
             url="http://14.18.63.234:9024";
-            showBar = intent.getBooleanExtra(WebConstants.INTENT_TAG_IS_SHOW_ACTION_BAR, false);
-            binding.actionBars.setVisibility(showBar ? View.VISIBLE : View.GONE);
+//            url = "file:///android_asset/demo.html";
+//            showBar = intent.getBooleanExtra(WebConstants.INTENT_TAG_IS_SHOW_ACTION_BAR, false);
+//            binding.actionBars.setVisibility(showBar ? View.VISIBLE : View.GONE);
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction transaction = fm.beginTransaction();
-            webviewFragment = null;
-            webviewFragment = WebViewFragment.newInstance(url, (HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS), true);
+            webviewFragment = null;//(HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS)
+            webviewFragment = WebViewFragment.newInstance(url, null, true);
             transaction.replace(com.hero.webview.R.id.web_view_fragment, webviewFragment).commit();
-            setTitle(title);
-            bleDevice = intent.getParcelableExtra(KEY_DATA);
-            int mode = Integer.parseInt(SharedPreferencesUtil.getInstance(WebActivity.this).getSP("mode"));
+//            setTitle(title);
+//            bleDevice = intent.getParcelableExtra(KEY_DATA);
+//            int mode = Integer.parseInt(SharedPreferencesUtil.getInstance(WebActivity.this).getSP("mode"));
             if (bleDevice != null) {
                 mBleDeviceName = bleDevice.getName();
                 Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
             } else {
                 initBlePen();
             }
-        } else {
-            Log.d(TAG, "initData: intent null  bleDevice null");
-        }
+//        } else {
+//            Log.d(TAG, "initData: intent null  bleDevice null");
+//        }
 
     }
 
@@ -401,15 +402,6 @@ public class WebActivity extends AppCompatActivity {
     }
 
     public void showRecordDialog() {
-//        if (recordDialog != null && recordDialog.isShowing()) {
-//            return;
-//        }
-//        recordDialog = new RecordDialog
-//                .Builder(WebActivity.this)
-//                .setOnConnectedListener(onConnectedListener)
-//                .build();
-//        recordDialog.setCancelable(false);
-//        recordDialog.show();
         BleDialogFragment editNameDialog = new BleDialogFragment();
         editNameDialog.setOnConnectedListener(onConnectedListener);
         editNameDialog.show(getSupportFragmentManager(), "EditNameDialog");
@@ -440,10 +432,6 @@ public class WebActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (recordDialog != null && recordDialog.isShowing()) {
-//            recordDialog.dismiss();
-//            return true;
-//        }
         if (webviewFragment != null) {
             boolean flag = webviewFragment.onKeyDown(keyCode, event);
             if (flag) {
