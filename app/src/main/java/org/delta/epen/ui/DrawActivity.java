@@ -1,4 +1,4 @@
-package org.delta.epen;
+package org.delta.epen.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,7 +21,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,6 +36,10 @@ import com.tstudy.blepenlib.callback.BleUpdateCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.data.CoordinateInfo;
 import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
+
+import org.delta.epen.view.CanvasFrame;
+import org.delta.epen.view.MyProgress;
+import org.delta.epen.R;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package org.delta.epen;
+package org.delta.epen.utils;
 
 import android.app.Activity;
 import android.app.Application;

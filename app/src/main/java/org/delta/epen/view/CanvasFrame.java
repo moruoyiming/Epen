@@ -1,4 +1,4 @@
-package org.delta.epen;
+package org.delta.epen.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;

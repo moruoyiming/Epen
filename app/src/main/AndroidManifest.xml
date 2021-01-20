@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="org.delta.epen.WebActivity"
+            android:name="org.delta.epen.ui.WebActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name="org.delta.epen.DrawActivity"
+            android:name="org.delta.epen.ui.DrawActivity"
             android:screenOrientation="landscape" />
 
 <!--        <activity-->
@@ -43,7 +43,7 @@
 <!--          >-->
 <!--        </activity>-->
 
-        <receiver android:name="org.delta.epen.BootReceiver">
+        <receiver android:name="org.delta.epen.utils.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -52,7 +52,7 @@
         </receiver>
 
         <service
-            android:name="org.delta.epen.MyAccessibilityService"
+            android:name="org.delta.epen.utils.MyAccessibilityService"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

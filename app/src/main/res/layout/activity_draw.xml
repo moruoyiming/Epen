@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <org.delta.epen.MyProgress
+                <org.delta.epen.view.MyProgress
                     android:id="@+id/pgsBar"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="0dp"

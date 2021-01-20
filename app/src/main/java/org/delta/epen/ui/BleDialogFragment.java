@@ -1,4 +1,4 @@
-package org.delta.epen;
+package org.delta.epen.ui;
 
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
@@ -8,9 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,6 +21,9 @@ import com.tstudy.blepenlib.callback.BleGattCallback;
 import com.tstudy.blepenlib.callback.BleScanCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.exception.BleException;
+
+import org.delta.epen.adapter.DeviceAdapter;
+import org.delta.epen.R;
 
 import java.util.List;
 

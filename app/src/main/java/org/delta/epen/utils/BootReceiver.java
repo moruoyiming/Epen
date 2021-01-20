@@ -1,11 +1,11 @@
-package org.delta.epen;
+package org.delta.epen.utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.util.Log;
-import android.widget.Toast;
+
+import org.delta.epen.ui.MainActivity;
 
 public class BootReceiver extends BroadcastReceiver {
     @Override

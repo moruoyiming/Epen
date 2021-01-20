@@ -1,4 +1,4 @@
-package org.delta.epen;
+package org.delta.epen.ui;
 
 import android.Manifest;
 import android.app.Service;
@@ -10,7 +10,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -33,8 +32,9 @@ import com.tstudy.blepenlib.BlePenStreamManager;
 import com.tstudy.blepenlib.callback.BlePenStreamCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.data.CoordinateInfo;
-import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
 
+import org.delta.epen.MyLicense;
+import org.delta.epen.R;
 import org.delta.epen.databinding.ActivityCommonWeb2Binding;
 
 import java.text.SimpleDateFormat;

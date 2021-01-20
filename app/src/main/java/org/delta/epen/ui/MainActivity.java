@@ -1,7 +1,6 @@
-package org.delta.epen;
+package org.delta.epen.ui;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
@@ -46,6 +45,10 @@ import com.tstudy.blepenlib.callback.BleScanCallback;
 import com.tstudy.blepenlib.data.BleDevice;
 import com.tstudy.blepenlib.exception.BleException;
 import com.tstudy.blepenlib.utils.SharedPreferencesUtil;
+
+import org.delta.epen.adapter.DeviceAdapter;
+import org.delta.epen.MyLicense;
+import org.delta.epen.R;
 
 import java.util.List;
 
