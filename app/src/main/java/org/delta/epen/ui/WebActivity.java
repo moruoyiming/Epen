@@ -2,8 +2,12 @@ package org.delta.epen.ui;
 
 import android.Manifest;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,9 +70,7 @@ import static com.tstudy.blepenlib.constant.Constant.WARN_MEMORY;
  */
 public class WebActivity extends AppCompatActivity {
     private static final String TAG = "Battery";
-//    private String title;
     private String url;
-//    private boolean showBar;
     private ActivityCommonWeb2Binding binding;
     private BaseWebFragment webviewFragment;
     private HashMap<String, String> hashMap = new HashMap<>();
@@ -76,12 +78,14 @@ public class WebActivity extends AppCompatActivity {
     public static final String KEY_MODE = "DEVICE_MODE";
     private BleDevice bleDevice;
     private String mBleDeviceName;
-    private BlePenStreamCallback mBlePenStreamCallback;
     private boolean isConnectedNow;
     private String writeString;
     private final int MAG_SCAN = 1;
     private MyHandle mHandle;
     private BleDialog.onConnectedListener onConnectedListener;
+    private SettingDialog.onSetCallBack setOnSetCallBack;
+    private BlePenStreamCallback mBlePenStreamCallback;
+    private Disposable mDisposable;
 
     public static void startCommonWeb(Context context, BleDevice bleDevice, String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
@@ -110,37 +114,121 @@ public class WebActivity extends AppCompatActivity {
         initListener();
         openPenStream();
         startTime();
+
     }
 
 
     private void initData() {
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            title = intent.getStringExtra(WebConstants.INTENT_TAG_TITLE);
-//            url = intent.getStringExtra(WebConstants.INTENT_TAG_URL);
-            url="http://14.18.63.234:9024";
-//            url = "file:///android_asset/demo.html";
-//            showBar = intent.getBooleanExtra(WebConstants.INTENT_TAG_IS_SHOW_ACTION_BAR, false);
-//            binding.actionBars.setVisibility(showBar ? View.VISIBLE : View.GONE);
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction transaction = fm.beginTransaction();
-            webviewFragment = null;//(HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS)
-            webviewFragment = WebViewFragment.newInstance(url, null, true);
-            transaction.replace(com.hero.webview.R.id.web_view_fragment, webviewFragment).commit();
-//            setTitle(title);
-//            bleDevice = intent.getParcelableExtra(KEY_DATA);
-//            int mode = Integer.parseInt(SharedPreferencesUtil.getInstance(WebActivity.this).getSP("mode"));
-            if (bleDevice != null) {
-                mBleDeviceName = bleDevice.getName();
-                Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
-            } else {
-                initBlePen();
-            }
-//        } else {
-//            Log.d(TAG, "initData: intent null  bleDevice null");
-//        }
-
+//      url="http://14.18.63.234:9024";
+        url = "file:///android_asset/demo.html";
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        webviewFragment = null;//(HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS)
+        webviewFragment = WebViewFragment.newInstance(url, null, true);
+        transaction.replace(com.hero.webview.R.id.web_view_fragment, webviewFragment).commit();
+        if (bleDevice != null) {
+            mBleDeviceName = bleDevice.getName();
+            Log.d(TAG, "initData: bleDevice: " + mBleDeviceName);
+        } else {
+            initBlePen();
+        }
     }
+
+
+    private void initBlePen() {
+        boolean initSuccess = BlePenStreamManager.getInstance().init(getApplication(), MyLicense.getBytes());
+        if (!initSuccess) {
+            Toast.makeText(this, "初始化失败，请到开放平台申请授权或检查设备是否支持蓝牙BLE", Toast.LENGTH_LONG).show();
+        }
+        //lib 日志开关 true 打开  默认false
+        BlePenStreamManager.getInstance().enableLog(true);
+    }
+
+    private void checkBle(int status) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_INIT_BLE);
+                hashMap.put("status", String.valueOf(status));
+                CallJsMethod(WebConstants.ON_INIT_BLE, hashMap);
+            }
+        });
+    }
+
+    private void openPenStream() {
+        if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
+            isConnectedNow = true;
+            BlePenStreamManager.getInstance().openPenStream(bleDevice, mBlePenStreamCallback);
+            mHandle.removeMessages(MAG_SCAN);
+        }
+    }
+
+    class MyHandle extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    break;
+                case MAG_SCAN:
+                    if (!isConnectedNow) {
+                        mHandle.sendEmptyMessageDelayed(MAG_SCAN, 15 * 1000);
+                    }
+                    break;
+                default:
+
+            }
+        }
+    }
+
+
+    public void showRecordDialog() {
+        BleDialog editNameDialog = new BleDialog();
+        editNameDialog.setOnConnectedListener(onConnectedListener);
+        editNameDialog.setCancelable(false);
+        editNameDialog.show(getSupportFragmentManager(), "EditNameDialog");
+    }
+
+    public void showSettinDialog() {
+        SettingDialog settingDialog = new SettingDialog();
+        settingDialog.setOnSetCallBack(setOnSetCallBack);
+        settingDialog.setCancelable(false);
+        settingDialog.show(getSupportFragmentManager(), "settingDialog");
+    }
+
+
+    public void CallJsMethod(String cmd, Object params) {
+        webviewFragment.CallJsMethod(cmd, params);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (webviewFragment != null) {
+            boolean flag = webviewFragment.onKeyDown(keyCode, event);
+            if (flag) {
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private Command checkBle = new Command() {
+        @Override
+        public String name() {
+            return WebConstants.INIT_BLE;
+        }
+
+        @Override
+        public void exec(Context context, Map params, CommandCallBack callBack) {
+            if (!BlePenStreamManager.getInstance().isConnected(bleDevice)) {
+                checkBle(WebConstants.BLE_STATUS_NORMAL);
+                requestPermission();
+            } else {
+                checkBle(WebConstants.BLE_STATUS_CONNECTED);
+            }
+        }
+    };
 
     private void initListener() {
         mBlePenStreamCallback = new BlePenStreamCallback() {
@@ -277,93 +365,14 @@ public class WebActivity extends AppCompatActivity {
                 showRecordDialog();
             }
         };
-    }
 
-    private void initBlePen() {
-        boolean initSuccess = BlePenStreamManager.getInstance().init(getApplication(), MyLicense.getBytes());
-        if (!initSuccess) {
-            Toast.makeText(this, "初始化失败，请到开放平台申请授权或检查设备是否支持蓝牙BLE", Toast.LENGTH_LONG).show();
-        }
-        //lib 日志开关 true 打开  默认false
-        BlePenStreamManager.getInstance().enableLog(true);
-    }
-
-    private void checkBle(int status) {
-        runOnUiThread(new Runnable() {
+        setOnSetCallBack = new SettingDialog.onSetCallBack() {
             @Override
-            public void run() {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_INIT_BLE);
-                hashMap.put("status", String.valueOf(status));
-                CallJsMethod(WebConstants.ON_INIT_BLE, hashMap);
+            public void onResult() {
+                requestPermission();
             }
-        });
+        };
     }
-
-    private void openPenStream() {
-        if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
-            isConnectedNow = true;
-            BlePenStreamManager.getInstance().openPenStream(bleDevice, mBlePenStreamCallback);
-            mHandle.removeMessages(MAG_SCAN);
-        }
-    }
-
-    class MyHandle extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 0:
-                    break;
-                case MAG_SCAN:
-                    if (!isConnectedNow) {
-                        mHandle.sendEmptyMessageDelayed(MAG_SCAN, 15 * 1000);
-                    }
-                    break;
-                default:
-
-            }
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (bleDevice != null) {
-            boolean isConnected = BlePenStreamManager.getInstance().isConnected(bleDevice);
-            if (isConnected) {
-                BlePenStreamManager.getInstance().disconnect(bleDevice);
-            }
-        }
-        closeTimer();
-    }
-
-    /**
-     * 这里写的要特别注意，denied方法，必须是带有一个int参数的方法，下面的也一样
-     *
-     * @param requestCode
-     */
-    @PermissionCancel
-    public void denied(int requestCode) {
-        Log.e(TAG, "权限请求拒绝");
-        Toast.makeText(WebActivity.this, "拒绝蓝牙权限", Toast.LENGTH_SHORT).show();
-    }
-
-    @PermissionDenied
-    public void deniedForever(int requestCode) {
-        Log.e(TAG, "权限请求拒绝，用户永久拒绝");
-//        Toast.makeText(WebActivity.this, "权限请求拒绝，用户永久拒绝", Toast.LENGTH_SHORT).show();
-        showSettinDialog();
-    }
-
-    //Manifest.permission.READ_EXTERNAL_STORAGE,
-    @Permission(permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, requestCode = 1)
-    public void requestPermission() {
-        Log.i("Permission", "权限请求成功");
-        showRecordDialog();
-    }
-
-    private Disposable mDisposable;
 
     /**
      * 启动定时器
@@ -405,55 +414,38 @@ public class WebActivity extends AppCompatActivity {
         }
     }
 
-    public void showRecordDialog() {
-        BleDialog editNameDialog = new BleDialog();
-        editNameDialog.setOnConnectedListener(onConnectedListener);
-        editNameDialog.show(getSupportFragmentManager(), "EditNameDialog");
-    }
-    public void showSettinDialog() {
-        SettingDialog settingDialog = new SettingDialog();
-        settingDialog.show(getSupportFragmentManager(), "settingDialog");
-    }
-
-    private Command checkBle = new Command() {
-        @Override
-        public String name() {
-            return WebConstants.INIT_BLE;
-        }
-
-        @Override
-        public void exec(Context context, Map params, CommandCallBack callBack) {
-            if (!BlePenStreamManager.getInstance().isConnected(bleDevice)) {
-                checkBle(WebConstants.BLE_STATUS_NORMAL);
-                requestPermission();
-            } else {
-                checkBle(WebConstants.BLE_STATUS_CONNECTED);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bleDevice != null) {
+            boolean isConnected = BlePenStreamManager.getInstance().isConnected(bleDevice);
+            if (isConnected) {
+                BlePenStreamManager.getInstance().disconnect(bleDevice);
             }
         }
-    };
-
-
-    public void CallJsMethod(String cmd, Object params) {
-        webviewFragment.CallJsMethod(cmd, params);
+        closeTimer();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (webviewFragment != null) {
-            boolean flag = webviewFragment.onKeyDown(keyCode, event);
-            if (flag) {
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
+    /**
+     * 这里写的要特别注意，denied方法，必须是带有一个int参数的方法，下面的也一样
+     *
+     * @param requestCode
+     */
+    @PermissionCancel
+    public void denied(int requestCode) {
+        Log.e(TAG, "权限请求拒绝");
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    @PermissionDenied
+    public void deniedForever(int requestCode) {
+        Log.e(TAG, "权限请求拒绝，用户永久拒绝");
+        showSettinDialog();
     }
+
+    @Permission(permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, requestCode = 1)
+    public void requestPermission() {
+        Log.i("Permission", "权限请求成功");
+        showRecordDialog();
+    }
+
 }

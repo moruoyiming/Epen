@@ -308,7 +308,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Toast.makeText(MainActivity.this, disConnectedMes, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onDisConnected: " + disConnectedMes);
-//                showRecordDialog();
             }
         };
         BlePenStreamManager.getInstance().connect(bleDevice.getMac(), bleGattCallback);

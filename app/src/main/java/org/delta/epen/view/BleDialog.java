@@ -1,8 +1,11 @@
 package org.delta.epen.view;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +40,7 @@ public class BleDialog extends DialogFragment {
     private TextView tvNull;
     private ListView mListView;
     private boolean enabled = false;
+    private BluetoothAdapter mBluetoothAdapter;
 
     public onConnectedListener getOnConnectedListener() {
         return onConnectedListener;
@@ -56,14 +60,21 @@ public class BleDialog extends DialogFragment {
         tvScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!enabled) {
-                    enabled = true;
-//                tvScan.setEnabled(false);
-                    startScan();
-                } else {
-                    Toast.makeText(context, "正在扫描蓝牙设备", Toast.LENGTH_LONG).show();
+                if (!mBluetoothAdapter.isEnabled()) {
+                    Toast.makeText(getActivity(), "正在开启蓝牙", Toast.LENGTH_LONG).show();
+                    boolean ble = mBluetoothAdapter.enable();
+                    if (ble) {
+                        Toast.makeText(getActivity(), "蓝牙开启成功", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity(), "蓝牙开启失败", Toast.LENGTH_LONG).show();
+                    }
+                }else{
+                    if (!enabled) {
+                        startScan();
+                    } else {
+                        Toast.makeText(context, "正在扫描蓝牙设备", Toast.LENGTH_LONG).show();
+                    }
                 }
-
             }
         });
         close = view.findViewById(R.id.iv_close);
@@ -100,7 +111,22 @@ public class BleDialog extends DialogFragment {
         });
         mListView = (ListView) view.findViewById(R.id.list_device);
         mListView.setAdapter(mDeviceAdapter);
-        startScan();
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(getActivity(), "检查设备是否支持蓝牙BLE", Toast.LENGTH_LONG).show();
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            Toast.makeText(getActivity(), "正在开启蓝牙", Toast.LENGTH_LONG).show();
+            boolean ble = mBluetoothAdapter.enable();
+            if (ble) {
+                Toast.makeText(getActivity(), "蓝牙开启成功", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "蓝牙开启失败", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            startScan();
+        }
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
         params.gravity = Gravity.BOTTOM | Gravity.CENTER;
         return view;
@@ -157,6 +183,7 @@ public class BleDialog extends DialogFragment {
             @Override
             public void onScanStarted(boolean success) {
                 Log.d(TAG, "onScanStarted: " + success);
+                enabled = true;
                 tvNull.setVisibility(View.GONE);
                 mListView.setVisibility(View.VISIBLE);
                 tvScan.setText(R.string.scan_scan);
@@ -178,10 +205,10 @@ public class BleDialog extends DialogFragment {
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
-//                tvScan.setEnabled(true);
                 enabled = false;
                 tvScan.setText(R.string.start_scan);
                 Log.d(TAG, "onScanFinished: " + scanResultList.toString());
+                Toast.makeText(context, getString(R.string.bel_null), Toast.LENGTH_LONG).show();
                 if (scanResultList.size() == 0) {
                     tvNull.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.GONE);
@@ -190,6 +217,7 @@ public class BleDialog extends DialogFragment {
         };
         BlePenStreamManager.getInstance().scan(callback);
     }
+
 
     public interface onConnectedListener {
         void onConnected(BleDevice bleDevice);

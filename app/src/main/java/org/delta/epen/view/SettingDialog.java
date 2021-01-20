@@ -17,11 +17,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 
+import com.tstudy.blepenlib.data.BleDevice;
+
 import org.delta.epen.R;
 
 public class SettingDialog extends DialogFragment {
     private ImageView close;
     private TextView tvDetails;
+    private onSetCallBack onSetCallBack;
     private int REQUEST_PERMISSION_SETTING = 131;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -40,8 +43,7 @@ public class SettingDialog extends DialogFragment {
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
                 intent.setData(uri);
-                startActivity(intent);
-                dismiss();
+                startActivityForResult(intent,REQUEST_PERMISSION_SETTING);
             }
         });
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
@@ -49,9 +51,27 @@ public class SettingDialog extends DialogFragment {
         return view;
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Log.i("permission"," resultcode "+resultCode + " requestCode  "+requestCode);
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("permission"," resultcode "+resultCode + " requestCode  "+requestCode);
+        if(requestCode==REQUEST_PERMISSION_SETTING){
+            dismiss();
+            if (onSetCallBack != null) {
+                onSetCallBack.onResult();
+            }
+        }
+    }
+
+    public SettingDialog.onSetCallBack getOnSetCallBack() {
+        return onSetCallBack;
+    }
+
+    public void setOnSetCallBack(SettingDialog.onSetCallBack onSetCallBack) {
+        this.onSetCallBack = onSetCallBack;
+    }
+
+    public interface onSetCallBack {
+        void onResult();
+    }
 }
