@@ -172,3 +172,7 @@
 -keepattributes *Annotation*
 -keepattributes *JavascriptInterface*
 
+-keep class org.delta.epen.ui.WebActivity {
+public void denied(int);
+public void deniedForever(int);
+}

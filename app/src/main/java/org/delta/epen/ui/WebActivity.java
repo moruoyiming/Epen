@@ -36,6 +36,8 @@ import com.tstudy.blepenlib.data.CoordinateInfo;
 import org.delta.epen.MyLicense;
 import org.delta.epen.R;
 import org.delta.epen.databinding.ActivityCommonWeb2Binding;
+import org.delta.epen.view.BleDialog;
+import org.delta.epen.view.SettingDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -79,7 +81,7 @@ public class WebActivity extends AppCompatActivity {
     private String writeString;
     private final int MAG_SCAN = 1;
     private MyHandle mHandle;
-    private BleDialogFragment.onConnectedListener onConnectedListener;
+    private BleDialog.onConnectedListener onConnectedListener;
 
     public static void startCommonWeb(Context context, BleDevice bleDevice, String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
@@ -257,7 +259,7 @@ public class WebActivity extends AppCompatActivity {
             }
         };
 
-        onConnectedListener = new BleDialogFragment.onConnectedListener() {
+        onConnectedListener = new BleDialog.onConnectedListener() {
             @Override
             public void onConnected(BleDevice ble) {
                 Log.d(TAG, "onConnected: " + ble);
@@ -350,6 +352,8 @@ public class WebActivity extends AppCompatActivity {
     @PermissionDenied
     public void deniedForever(int requestCode) {
         Log.e(TAG, "权限请求拒绝，用户永久拒绝");
+//        Toast.makeText(WebActivity.this, "权限请求拒绝，用户永久拒绝", Toast.LENGTH_SHORT).show();
+        showSettinDialog();
     }
 
     //Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -402,11 +406,14 @@ public class WebActivity extends AppCompatActivity {
     }
 
     public void showRecordDialog() {
-        BleDialogFragment editNameDialog = new BleDialogFragment();
+        BleDialog editNameDialog = new BleDialog();
         editNameDialog.setOnConnectedListener(onConnectedListener);
         editNameDialog.show(getSupportFragmentManager(), "EditNameDialog");
     }
-
+    public void showSettinDialog() {
+        SettingDialog settingDialog = new SettingDialog();
+        settingDialog.show(getSupportFragmentManager(), "settingDialog");
+    }
 
     private Command checkBle = new Command() {
         @Override

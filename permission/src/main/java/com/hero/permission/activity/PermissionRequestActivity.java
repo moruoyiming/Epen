@@ -68,9 +68,11 @@ public class PermissionRequestActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //获取权限的申请结果，本Activity只做申请操作，需要将申请结果通知外界，结果的处理需外界传递
         boolean granted = PermissionUtil.verifyPermissions(grantResults);
+        Log.i("permission","granted="+granted);
         if (granted) {
             mPermissionCallback.granted(requestCode);
         } else {
+            Log.i("permission","shouldShowRequestPermissionRationale="+PermissionUtil.shouldShowRequestPermissionRationale(this, permissions));
             if (PermissionUtil.shouldShowRequestPermissionRationale(this, permissions)) {
                 mPermissionCallback.denied(requestCode);
             } else {

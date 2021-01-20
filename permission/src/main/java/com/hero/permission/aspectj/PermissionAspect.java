@@ -43,11 +43,13 @@ public class PermissionAspect {
 
                     @Override
                     public void denied(int requestCode) {
+                        Log.i("Permission", "PermissionAspect denied ");
                         PermissionUtil.invokeAnnotation(point.getThis(), PermissionCancel.class, requestCode);
                     }
 
                     @Override
                     public void deniedForever(int requestCode) {
+                        Log.i("Permission", "PermissionAspect deniedForever ");
                         PermissionUtil.invokeAnnotation(point.getThis(), PermissionDenied.class, requestCode);
                     }
                 });

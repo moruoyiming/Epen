@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.collection.SimpleArrayMap;
 import androidx.core.app.ActivityCompat;
@@ -111,6 +112,7 @@ public class PermissionUtil {
             return;
         }
         for (Method method : methods) {
+            Log.i("Permission", "method "+method.getName());
             //获取该方法是否有 annotationClass 注解
             boolean isHasAnnotation = method.isAnnotationPresent(annotationClass);
             if (isHasAnnotation) {

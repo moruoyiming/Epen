@@ -1,4 +1,4 @@
-package org.delta.epen.ui;
+package org.delta.epen.view;
 
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
@@ -27,13 +27,16 @@ import org.delta.epen.R;
 
 import java.util.List;
 
-public class BleDialogFragment extends DialogFragment {
+public class BleDialog extends DialogFragment {
     private static final String TAG = "RecordDialog";
     private ImageView close;
     private DeviceAdapter mDeviceAdapter;
     private Context context;
     private onConnectedListener onConnectedListener;
     private TextView tvScan;
+    private TextView tvNull;
+    private ListView mListView;
+    private boolean enabled = false;
 
     public onConnectedListener getOnConnectedListener() {
         return onConnectedListener;
@@ -44,16 +47,23 @@ public class BleDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        context=getActivity();
-        View view = inflater.inflate(R.layout.vs_layout_history, container);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        context = getActivity();
+        View view = inflater.inflate(R.layout.ble_list, container);
         mDeviceAdapter = new DeviceAdapter(context);
         tvScan = view.findViewById(R.id.btn_scan);
+        tvNull = view.findViewById(R.id.ble_null);
         tvScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvScan.setEnabled(false);
-                startScan();
+                if (!enabled) {
+                    enabled = true;
+//                tvScan.setEnabled(false);
+                    startScan();
+                } else {
+                    Toast.makeText(context, "正在扫描蓝牙设备", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         close = view.findViewById(R.id.iv_close);
@@ -88,13 +98,14 @@ public class BleDialogFragment extends DialogFragment {
                 }
             }
         });
-        ListView listView_device = (ListView) view.findViewById(R.id.list_device);
-        listView_device.setAdapter(mDeviceAdapter);
+        mListView = (ListView) view.findViewById(R.id.list_device);
+        mListView.setAdapter(mDeviceAdapter);
         startScan();
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.gravity = Gravity.BOTTOM|Gravity.CENTER;
+        params.gravity = Gravity.BOTTOM | Gravity.CENTER;
         return view;
     }
+
     private void connect(final BleDevice bleDevice) {
         //连接回调
         BleGattCallback bleGattCallback = new BleGattCallback() {
@@ -146,6 +157,9 @@ public class BleDialogFragment extends DialogFragment {
             @Override
             public void onScanStarted(boolean success) {
                 Log.d(TAG, "onScanStarted: " + success);
+                tvNull.setVisibility(View.GONE);
+                mListView.setVisibility(View.VISIBLE);
+                tvScan.setText(R.string.scan_scan);
                 mDeviceAdapter.clearScanDevice();
                 mDeviceAdapter.notifyDataSetChanged();
             }
@@ -164,8 +178,14 @@ public class BleDialogFragment extends DialogFragment {
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
+//                tvScan.setEnabled(true);
+                enabled = false;
+                tvScan.setText(R.string.start_scan);
                 Log.d(TAG, "onScanFinished: " + scanResultList.toString());
-                tvScan.setEnabled(true);
+                if (scanResultList.size() == 0) {
+                    tvNull.setVisibility(View.VISIBLE);
+                    mListView.setVisibility(View.GONE);
+                }
             }
         };
         BlePenStreamManager.getInstance().scan(callback);

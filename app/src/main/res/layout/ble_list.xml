@@ -46,12 +46,13 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:padding="5dp"
+            android:textColor="@color/black"
             android:background="@drawable/bg_btn"
             android:layout_below="@id/tv_details"
             android:text="@string/start_scan"
             android:textSize="12sp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="158dp"
             android:layout_below="@+id/btn_scan"
@@ -59,6 +60,15 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
+            <TextView
+                android:id="@+id/ble_null"
+                android:text="@string/bel_null"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </TextView>
 
             <ListView
                 android:id="@+id/list_device"
@@ -69,7 +79,7 @@
                 android:dividerHeight="1dp"
                 android:scrollbars="none" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/iv_close"
