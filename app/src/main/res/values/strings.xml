@@ -51,8 +51,8 @@
     <string name="dialog_title">连接智能笔</string>
     <string name="dialog_details">当前未连接智能笔。操作如下：\n1.打开智能笔的蓝牙（打开笔盖，按压笔尖，笔的指示灯绿灯常亮后即为打开）\n2.打开手机蓝牙（下拉页面状态栏点击【蓝牙】即可打开）\n3.点击下方【开始扫描】按钮查询智能笔 \n4.点击【连接】按钮进行连接（请检查智能笔笔身标注的SN码、MAC码，请勿错连）\n连接成功后智能笔蓝灯常亮，可开始答题啦</string>
     <string name="open_permission">开启权限</string>
-    <string name="dialog2_title">当前尚未开启权限，无法使用相关功能</string>
-    <string name="dialog2_details">打开【设置】->【应用与权限】->【权限管理】->【听说读写】，开启【位置信息】和【读写手机存储】的权限</string>
+    <string name="dialog2_title">当前尚未开启【位置信息】和【读写手机存储】权限，无法使用相关功能</string>
+    <string name="dialog2_details">去开启权限  （【应用详情】>【权限管理】）</string>
     <string name="bel_null">未扫描到蓝牙设备，请检查操作重新尝试</string>
 
 </resources>

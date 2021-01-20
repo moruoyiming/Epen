@@ -119,8 +119,8 @@ public class WebActivity extends AppCompatActivity {
 
 
     private void initData() {
-//      url="http://14.18.63.234:9024";
-        url = "file:///android_asset/demo.html";
+      url="http://14.18.63.234:9024";
+//        url = "file:///android_asset/demo.html";
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         webviewFragment = null;//(HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS)
