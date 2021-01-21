@@ -34,7 +34,6 @@ public class BleDialog extends DialogFragment {
     private static final String TAG = "RecordDialog";
     private ImageView close;
     private DeviceAdapter mDeviceAdapter;
-    private Context context;
     private onConnectedListener onConnectedListener;
     private TextView tvScan;
     private TextView tvNull;
@@ -52,9 +51,8 @@ public class BleDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        context = getActivity();
         View view = inflater.inflate(R.layout.ble_list, container);
-        mDeviceAdapter = new DeviceAdapter(context);
+        mDeviceAdapter = new DeviceAdapter(getActivity());
         tvScan = view.findViewById(R.id.btn_scan);
         tvNull = view.findViewById(R.id.ble_null);
         tvScan.setOnClickListener(new View.OnClickListener() {
@@ -68,11 +66,11 @@ public class BleDialog extends DialogFragment {
                     } else {
                         Toast.makeText(getActivity(), "蓝牙开启失败", Toast.LENGTH_LONG).show();
                     }
-                }else{
+                } else {
                     if (!enabled) {
                         startScan();
                     } else {
-                        Toast.makeText(context, "正在扫描蓝牙设备", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "正在扫描蓝牙设备", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -147,7 +145,7 @@ public class BleDialog extends DialogFragment {
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                Toast.makeText(context, R.string.connected, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.connected, Toast.LENGTH_LONG).show();
                 mDeviceAdapter.addDevice(0, bleDevice);
                 mDeviceAdapter.notifyDataSetChanged();
                 Log.d(TAG, "onConnectSuccess: " + BlePenStreamManager.getInstance().isConnected(bleDevice) + "   " + bleDevice);
@@ -163,11 +161,11 @@ public class BleDialog extends DialogFragment {
             public void onDisConnected(boolean isActiveDisConnected, BleDevice bleDevice, BluetoothGatt gatt, int status) {
                 mDeviceAdapter.removeDevice(bleDevice);
                 mDeviceAdapter.notifyDataSetChanged();
-                String disConnectedMes = context.getString(R.string.disconnected);
+                String disConnectedMes = getString(R.string.disconnected);
                 if (isActiveDisConnected) {
-                    disConnectedMes = context.getString(R.string.active_disconnected);
+                    disConnectedMes = getString(R.string.active_disconnected);
                 }
-                Toast.makeText(context, disConnectedMes, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), disConnectedMes, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onDisConnected: " + disConnectedMes);
                 if (onConnectedListener != null) {
                     onConnectedListener.onDisConnected();
@@ -182,13 +180,15 @@ public class BleDialog extends DialogFragment {
         BleScanCallback callback = new BleScanCallback() {
             @Override
             public void onScanStarted(boolean success) {
-                Log.d(TAG, "onScanStarted: " + success);
-                enabled = true;
-                tvNull.setVisibility(View.GONE);
-                mListView.setVisibility(View.VISIBLE);
-                tvScan.setText(R.string.scan_scan);
-                mDeviceAdapter.clearScanDevice();
-                mDeviceAdapter.notifyDataSetChanged();
+                if (isAdded()) {
+                    Log.d(TAG, "onScanStarted: " + success);
+                    enabled = true;
+                    tvNull.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
+                    tvScan.setText(R.string.scan_scan);
+                    mDeviceAdapter.clearScanDevice();
+                    mDeviceAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -198,20 +198,26 @@ public class BleDialog extends DialogFragment {
 
             @Override
             public void onScanning(BleDevice bleDevice) {
-                Log.d(TAG, "onScanning: " + bleDevice);
-                mDeviceAdapter.addDevice(bleDevice);
-                mDeviceAdapter.notifyDataSetChanged();
+                if (isAdded()) {
+                    Log.d(TAG, "onScanning: " + bleDevice);
+                    mDeviceAdapter.addDevice(bleDevice);
+                    mDeviceAdapter.notifyDataSetChanged();
+                }
+
             }
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
-                enabled = false;
-                tvScan.setText(R.string.start_scan);
-                Log.d(TAG, "onScanFinished: " + scanResultList.toString());
-                Toast.makeText(context, getString(R.string.bel_null), Toast.LENGTH_LONG).show();
-                if (scanResultList.size() == 0) {
-                    tvNull.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.GONE);
+                if (isAdded()) {
+                    enabled = false;
+                    tvScan.setText(R.string.start_scan);
+                    String message = getString(R.string.bel_null);
+                    Log.d(TAG, "onScanFinished: " + scanResultList.toString());
+                    if (scanResultList.size() == 0) {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        tvNull.setVisibility(View.VISIBLE);
+                        mListView.setVisibility(View.GONE);
+                    }
                 }
             }
         };

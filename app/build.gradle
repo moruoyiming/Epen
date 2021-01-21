@@ -37,11 +37,11 @@ android {
             // 不显示Log
             buildConfigField "boolean", "LOG_DEBUG", "true"
             //混淆
-            minifyEnabled true
+            minifyEnabled false
             //Zipalign优化
-            zipAlignEnabled true
+            zipAlignEnabled false
             // 移除无用的resource文件
-            shrinkResources true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "Base_Url", DEV_Base_Url)
             buildConfigField("String", "BASE_HTML", DEV_BASE_HTML)
