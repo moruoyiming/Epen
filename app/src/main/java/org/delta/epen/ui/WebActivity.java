@@ -210,7 +210,7 @@ public class WebActivity extends AppCompatActivity {
                 return true;
             }
         }
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
 
     private Command checkBle = new Command() {

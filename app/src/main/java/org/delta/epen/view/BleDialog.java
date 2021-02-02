@@ -146,8 +146,10 @@ public class BleDialog extends DialogFragment {
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
                 Toast.makeText(getActivity(), R.string.connected, Toast.LENGTH_LONG).show();
-                mDeviceAdapter.addDevice(0, bleDevice);
-                mDeviceAdapter.notifyDataSetChanged();
+                if(mDeviceAdapter!=null){
+                    mDeviceAdapter.addDevice(0, bleDevice);
+                    mDeviceAdapter.notifyDataSetChanged();
+                }
                 Log.d(TAG, "onConnectSuccess: " + BlePenStreamManager.getInstance().isConnected(bleDevice) + "   " + bleDevice);
                 if (BlePenStreamManager.getInstance().isConnected(bleDevice)) {
                     if (onConnectedListener != null) {
@@ -159,8 +161,10 @@ public class BleDialog extends DialogFragment {
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                mDeviceAdapter.removeDevice(bleDevice);
-                mDeviceAdapter.notifyDataSetChanged();
+                if(mDeviceAdapter!=null){
+                    mDeviceAdapter.removeDevice(bleDevice);
+                    mDeviceAdapter.notifyDataSetChanged();
+                }
                 String disConnectedMes = getString(R.string.disconnected);
                 if (isActiveDisConnected) {
                     disConnectedMes = getString(R.string.active_disconnected);
