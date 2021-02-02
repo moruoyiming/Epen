@@ -145,7 +145,6 @@ public class BleDialog extends DialogFragment {
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                Toast.makeText(getActivity(), R.string.connected, Toast.LENGTH_LONG).show();
                 if(mDeviceAdapter!=null){
                     mDeviceAdapter.addDevice(0, bleDevice);
                     mDeviceAdapter.notifyDataSetChanged();
@@ -165,12 +164,6 @@ public class BleDialog extends DialogFragment {
                     mDeviceAdapter.removeDevice(bleDevice);
                     mDeviceAdapter.notifyDataSetChanged();
                 }
-                String disConnectedMes = getString(R.string.disconnected);
-                if (isActiveDisConnected) {
-                    disConnectedMes = getString(R.string.active_disconnected);
-                }
-                Toast.makeText(getActivity(), disConnectedMes, Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onDisConnected: " + disConnectedMes);
                 if (onConnectedListener != null) {
                     onConnectedListener.onDisConnected();
                 }

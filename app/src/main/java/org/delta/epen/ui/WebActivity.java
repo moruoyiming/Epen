@@ -350,6 +350,7 @@ public class WebActivity extends AppCompatActivity {
         onConnectedListener = new BleDialog.onConnectedListener() {
             @Override
             public void onConnected(BleDevice ble) {
+                Toast.makeText(WebActivity.this, R.string.connected, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onConnected: " + ble);
                 bleDevice = ble;
                 mBleDeviceName = bleDevice.getName();
@@ -359,6 +360,8 @@ public class WebActivity extends AppCompatActivity {
 
             @Override
             public void onDisConnected() {
+                Toast.makeText(WebActivity.this, R.string.active_disconnected, Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onDisConnected: ");
                 bleDevice = null;
                 mBleDeviceName = null;
                 checkBle(WebConstants.BLE_STATUS_DISCONNECTED);
