@@ -159,7 +159,7 @@ public abstract class BaseWebFragment extends Fragment implements WebViewCallBac
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == event.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            return onBackHandle();
+            return true;
         }
         return false;
     }
