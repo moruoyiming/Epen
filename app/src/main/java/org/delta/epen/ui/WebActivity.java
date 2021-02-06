@@ -14,6 +14,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -103,9 +104,9 @@ public class WebActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //定义全屏参数
-//        int flag=WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        int flag=WindowManager.LayoutParams.FLAG_FULLSCREEN;
 //        设置当前窗体为全屏显示
-//        getWindow().setFlags(flag, flag);
+        getWindow().setFlags(flag, flag);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         CommandsManager.getInstance().registerCommand(checkBle);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_common_web2);
@@ -117,6 +118,11 @@ public class WebActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigation();
+    }
 
     private void initData() {
       url="http://14.18.63.234:9024";
@@ -449,6 +455,13 @@ public class WebActivity extends AppCompatActivity {
     public void requestPermission() {
         Log.i("Permission", "权限请求成功");
         showRecordDialog();
+    }
+
+    public void hideNavigation(){
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
     }
 
 }
