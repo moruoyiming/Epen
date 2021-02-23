@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +46,8 @@ public class PermissionRequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int flag= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        getWindow().setFlags(flag, flag);
         Bundle bundle = getIntent().getExtras();
         String[] permission = bundle.getStringArray(PermissionConstants.NEED_PERMISSIONS);
         int requestCode = bundle.getInt(PermissionConstants.REQUEST_CODE, 0);
