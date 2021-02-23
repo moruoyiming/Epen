@@ -46,8 +46,6 @@ public class PermissionRequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int flag= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-        getWindow().setFlags(flag, flag);
         Bundle bundle = getIntent().getExtras();
         String[] permission = bundle.getStringArray(PermissionConstants.NEED_PERMISSIONS);
         int requestCode = bundle.getInt(PermissionConstants.REQUEST_CODE, 0);
