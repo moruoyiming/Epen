@@ -96,6 +96,10 @@ public class WebActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //定义全屏参数
+        int flag=WindowManager.LayoutParams.FLAG_FULLSCREEN;
+//        设置当前窗体为全屏显示
+        getWindow().setFlags(flag, flag);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         CommandsManager.getInstance().registerCommand(checkBle);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_common_web2);
