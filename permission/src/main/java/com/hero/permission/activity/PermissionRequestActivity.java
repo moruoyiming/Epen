@@ -46,10 +46,6 @@ public class PermissionRequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //定义全屏参数
-        int flag= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-//        设置当前窗体为全屏显示
-        getWindow().setFlags(flag, flag);
         Bundle bundle = getIntent().getExtras();
         String[] permission = bundle.getStringArray(PermissionConstants.NEED_PERMISSIONS);
         int requestCode = bundle.getInt(PermissionConstants.REQUEST_CODE, 0);
