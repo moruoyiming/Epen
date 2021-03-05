@@ -42,6 +42,7 @@ import com.tstudy.blepenlib.data.CoordinateInfo;
 import org.delta.epen.MyLicense;
 import org.delta.epen.R;
 import org.delta.epen.databinding.ActivityCommonWeb2Binding;
+import org.delta.epen.utils.AndroidBug5497Workaround;
 import org.delta.epen.view.BleDialog;
 import org.delta.epen.view.SettingDialog;
 
@@ -121,7 +122,7 @@ public class WebActivity extends AppCompatActivity {
         initListener();
         openPenStream();
         startTime();
-
+        AndroidBug5497Workaround.assistActivity(this);
     }
 
     @Override
