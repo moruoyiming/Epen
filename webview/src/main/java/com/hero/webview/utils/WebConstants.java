@@ -27,6 +27,34 @@ public class WebConstants {
     public static final String ON_BATTERY="onBattery";
     public static final String ON_DRAW="onDraw";
 
+//    获取WIFI信号强度
+//    监听WIFI状态改变（离线，上线）
+    public static final String WIFI_RSSI="getWifiRssi";
+    public static final String ON_WIFI_RSSI="onWifiRssi";
+
+//    获取移动数据信号强度
+//    监听移动数据状态改变（离线，上线）
+    public static final String CELLULAR_RSSI="getCellularRssi";
+    public static final String ON_CELLULAR_RSSI="onCellularRssi";
+
+    public static final String NETWORK_STATE="getNetworkState";
+    public static final String ON_NETWORK_STATE="onNetworkState";
+
+    public static final String NETWORK_RSSI="getNetworkRssi";
+    public static final String ON_NETWORK_RSSI="onNetworkRssi";
+//    获取手机电量
+//    监听电量变化
+    public static final String MOBILE_BATTERY="getMobileBattery";
+    public static final String ON_MOBILE_BATTERY="onMobileBattery";
+//    获取蓝牙状态
+//    监听蓝牙状态
+    public static final String BLE_STATE="getBleState";
+    public static final String ON_BLE_STATE="onBleState";
+
+    public static final String BLE_OPERATION  = "bleOperation"; // 0 = 打开， 1= 关闭 2 = 开始搜索蓝牙  3 = 取消搜索蓝牙  4 = 连接蓝牙  5 = 断开蓝牙
+    public static final String ON_BLE_OPERATION  = "onBleOperation";//6 = 打开成功  7 = 关闭成功  8. 搜索蓝牙结束  9 = 连接蓝牙成功 10 = 连接连接失败  11= 客户端蓝牙断开
+
+
     public static final int BLE_STATUS_NORMAL=0 ;
     public static final int BLE_STATUS_CONNECTED=1 ;
     public static final int BLE_STATUS_DISCONNECTED=2 ;

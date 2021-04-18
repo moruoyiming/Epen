@@ -43,7 +43,7 @@
 <!--          >-->
 <!--        </activity>-->
 
-        <receiver android:name="org.delta.epen.utils.BootReceiver">
+        <receiver android:name="org.delta.epen.receiver.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.LAUNCHER" />

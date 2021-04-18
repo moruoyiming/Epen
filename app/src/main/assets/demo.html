@@ -16,12 +16,10 @@
             background-color: #999999;
             margin-top: 20px;
         }
-
-
-
     </style>
 </head>
 <body style="height: 100%;">
+
 <script>
     function callAppToast() {
         sdk.post("showToast", {message: "this is action from html"});
@@ -66,7 +64,37 @@
               sdk.addCallback("onInitBle",function(paras){// status = 0 未连接，status  = 1 已连接 status = 2 已断开 status = 3 开启写模式
                console.log("paras status = 蓝牙连接状态 "+paras.status)
               });
+
+              //注册网络状态回调函数 返回参数 wifiNetworkState = true  dataNetworkState = true
+               sdk.addCallback("onNetworkState",function(paras){
+               console.log("paras status = 网络连接状态 "+paras.wifiNetworkState + paras.dataNetworkState)
+              });
+
+              //注册网络信号强度回调函数 返回参数 int mNetworkRssi
+               sdk.addCallback("onNetworkRssi",function(paras){
+               console.log("paras status = 网络状态 "+paras.mNetworkRssi)
+              });
+
+              //注册手机电量回调函数 返回参数 int levelPercent = 0-100
+               sdk.addCallback("onMobileBattery",function(paras){
+               console.log("paras status = 手机电池百分比 "+paras.levelPercent)
+              });
+
+              //注册蓝牙状态回调函数 返回参数  bleState = true/false
+               sdk.addCallback("onBleState",function(paras){
+               console.log("paras status = 蓝牙状态 "+paras.bleState)
+              });
+
+              //注册蓝牙操作回调函数 返回参数 int operation = 6/7/8/9/10/11 为搜索结束时，增加list列表字段。字段为数组[{rssi=-46, name=TD-701-037X1, mac=A8:90:42:0E:94:97}]
+               sdk.addCallback("onBleOperation",function(paras){//6 = 打开成功  7 = 关闭成功  8. 搜索蓝牙结束  9 = 连接蓝牙成功 10 = 连接连接失败  11= 客户端蓝牙断开
+               console.log("paras status = 蓝牙操作状态 "+paras.operation)
+                if(paras.operation==8){
+                 console.log("paras status = 蓝牙列表 "+paras.list)
+                }
+              });
+
     }
+
     function callInitBle() {
         sdk.postWithCallback("initBle", {type: "account"}, function(res) {
             console.log(JSON.stringify(res))
@@ -74,8 +102,70 @@
         });
     }
 
+    //网络状态 返回值  wifiNetworkState = true  dataNetworkState = true
+    function callNetWorkState(){
+     sdk.postWithCallback("getNetworkState", {type: "account"}, function(res) {
+            console.log(JSON.stringify(res))
+            sdk.post("showToast", {message: JSON.stringify(res)});
+        });
+    }
+
+    //网络信号强度 返回值 int mNetworkRssi
+    function callNetWorkRssi(){
+     sdk.postWithCallback("getNetworkRssi", {type: "account"}, function(res) {
+            console.log(JSON.stringify(res))
+            sdk.post("showToast", {message: JSON.stringify(res)});
+        });
+    }
+
+    //手机电池百分比 返回值 int levelPercent = 0-100
+    function callMobileBattery(){
+     sdk.postWithCallback("getMobileBattery", {type: "account"}, function(res) {
+            console.log(JSON.stringify(res))
+            sdk.post("showToast", {message: JSON.stringify(res)});
+        });
+    }
+
+    //蓝牙状态 返回值 bleState = true/false
+    function callBleState(){
+     sdk.postWithCallback("getBleState", {type: "account"}, function(res) {
+            console.log(JSON.stringify(res))
+            sdk.post("showToast", {message: JSON.stringify(res)});
+        });
+    }
+
+    // 打开蓝牙 执行搜索蓝牙时，需先调用打开蓝牙函数
+    function openBle(){//0 = 打开蓝牙， 1= 关闭蓝牙 2 = 开始搜索蓝牙  3 = 取消搜索蓝牙  4 = 连接蓝牙  5 = 断开蓝牙
+      sdk.post("bleOperation", {operation: "0"});
+    }
+
+    //关闭蓝牙
+    function closeBle(){
+        sdk.post("bleOperation", {operation: "1"});
+    }
+
+    //开始搜索蓝牙
+    function scanBle(){
+        sdk.post("bleOperation", {operation: "2"});
+    }
+
+    //取消搜索蓝牙
+    function cancelScanBle(){
+        sdk.post("bleOperation", {operation: "3"});
+    }
+
+    //连接蓝牙  需传入mac地址
+    function connectBle(){
+        sdk.post("bleOperation", {operation: "4" ,mac: "A8:90:42:0E:94:97"});
+    }
+
+    //断开蓝牙  需传入mac地址
+    function disConnectBle(){
+        sdk.post("bleOperation", {operation: "5" ,mac: "A8:90:42:0E:94:97"});
+    }
 
 </script>
+
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="registerCallback()">调用: 注册函数
 </div>
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callAppToast()">调用: showToast
@@ -88,6 +178,28 @@
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callNewPager()">调用: newPage</div>
 
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="callInitBle()">调用: initBle</div>
+
+
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callNetWorkState()">调用: getNetworkState</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callNetWorkRssi()">调用: getNetworkRssi</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callMobileBattery()">调用: getMobileBattery</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="callBleState()">调用: getBleState</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="openBle()">调用: 打开蓝牙</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="closeBle()">调用: 关闭蓝牙</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="scanBle()">调用: 开始搜索蓝牙</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="cancelScanBle()">调用: 取消搜索蓝牙</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="connectBle()">调用: 连接蓝牙</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="disConnectBle()">调用: 断开蓝牙</div>
 
 <script src="js/sdk.js" charset="utf-8"></script>
 </body>
