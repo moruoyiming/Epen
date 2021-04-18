@@ -54,6 +54,8 @@ public class WebConstants {
     public static final String BLE_OPERATION  = "bleOperation"; // 0 = 打开， 1= 关闭 2 = 开始搜索蓝牙  3 = 取消搜索蓝牙  4 = 连接蓝牙  5 = 断开蓝牙
     public static final String ON_BLE_OPERATION  = "onBleOperation";//6 = 打开成功  7 = 关闭成功  8. 搜索蓝牙结束  9 = 连接蓝牙成功 10 = 连接连接失败  11= 客户端蓝牙断开
 
+    public static final String SCREEN_SIZE = "screenSize";
+    public static final String ON_SCREEN_SIZE = "onScreenSize";
 
     public static final int BLE_STATUS_NORMAL=0 ;
     public static final int BLE_STATUS_CONNECTED=1 ;

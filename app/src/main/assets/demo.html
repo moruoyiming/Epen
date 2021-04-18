@@ -93,6 +93,11 @@
                 }
               });
 
+               //注册屏幕尺寸接口 返回参数 width=1080  height=750
+               sdk.addCallback("onScreenSize",function(paras){
+               console.log("paras 屏幕尺寸 "+paras.width+"  "+paras.height)
+              });
+
     }
 
     function callInitBle() {
@@ -164,6 +169,13 @@
         sdk.post("bleOperation", {operation: "5" ,mac: "A8:90:42:0E:94:97"});
     }
 
+    function getScreenSize(){
+     sdk.postWithCallback("screenSize", {type: "account"}, function(res) {
+            console.log(JSON.stringify(res))
+            sdk.post("showToast", {message: JSON.stringify(res)});
+        });
+    }
+
 </script>
 
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="registerCallback()">调用: 注册函数
@@ -200,6 +212,8 @@
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="connectBle()">调用: 连接蓝牙</div>
 
 <div class="item" style="font-size: 20px; color: #ffffff" onclick="disConnectBle()">调用: 断开蓝牙</div>
+
+<div class="item" style="font-size: 20px; color: #ffffff" onclick="getScreenSize()">调用: 获取屏幕宽高</div>
 
 <script src="js/sdk.js" charset="utf-8"></script>
 </body>

@@ -52,6 +52,7 @@ import org.delta.epen.listenner.NetWorkStateListener;
 import org.delta.epen.receiver.BleReceiver;
 import org.delta.epen.utils.AndroidBug5497Workaround;
 import org.delta.epen.receiver.NetWorkStateReceiver;
+import org.delta.epen.utils.ViewUtil;
 import org.delta.epen.view.BleDialog;
 import org.delta.epen.view.SettingDialog;
 
@@ -145,6 +146,7 @@ public class WebActivity extends AppCompatActivity {
         CommandsManager.getInstance().registerCommand(networkRssi);
         CommandsManager.getInstance().registerCommand(bleState);
         CommandsManager.getInstance().registerCommand(bleOperation);
+        CommandsManager.getInstance().registerCommand(screenSize);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_common_web2);
         mHandle = new MyHandle();
         initData();
@@ -495,6 +497,30 @@ public class WebActivity extends AppCompatActivity {
         }
     };
 
+    private Command screenSize = new Command() {
+
+        @Override
+        public String name() {
+            return WebConstants.SCREEN_SIZE;
+        }
+
+        @Override
+        public void exec(Context context, Map params, CommandCallBack callBack) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_SCREEN_SIZE);
+                    int width = ViewUtil.getScreenWidth(WebActivity.this);
+                    int height = ViewUtil.getScreenHeight(WebActivity.this);
+                    hashMap.put("width", String.valueOf(width));
+                    hashMap.put("height", String.valueOf(height));
+                    CallJsMethod(WebConstants.ON_SCREEN_SIZE, hashMap);
+                }
+            });
+        }
+    };
+
 
     private void initListener() {
         mBlePenStreamCallback = new BlePenStreamCallback() {
@@ -825,7 +851,7 @@ public class WebActivity extends AppCompatActivity {
                         CallJsMethod(WebConstants.ON_BLE_OPERATION, hashMap);
                     }
                 });
-                mBleDevice=bleDevice;
+                mBleDevice = bleDevice;
                 if (BlePenStreamManager.getInstance().isConnected(mBleDevice)) {
                     Toast.makeText(WebActivity.this, R.string.connected, Toast.LENGTH_LONG).show();
                     Log.d(TAG, "onConnected: " + mBleDevice);
