@@ -133,7 +133,7 @@ public class ProgressWebChromeClient extends WebChromeClient {
 
     @Override
     public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-        Log.i("consolemessage","consoleMessage="+consoleMessage.message());
+        Log.i("consolemessage",consoleMessage.message());
         return super.onConsoleMessage(consoleMessage);
     }
 }

@@ -147,6 +147,8 @@ public class WebActivity extends AppCompatActivity {
         CommandsManager.getInstance().registerCommand(bleState);
         CommandsManager.getInstance().registerCommand(bleOperation);
         CommandsManager.getInstance().registerCommand(screenSize);
+        mBleState=mBluetoothAdapter.isEnabled();
+        System.out.println("mBleState "+mBleState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_common_web2);
         mHandle = new MyHandle();
         initData();
@@ -185,7 +187,7 @@ public class WebActivity extends AppCompatActivity {
                     public void run() {
                         HashMap<String, String> hashMap = new HashMap<>();
                         hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_NETWORK_RSSI);
-                        hashMap.put("networkRssi", String.valueOf(mNetworkRssi));
+                        hashMap.put("mNetworkRssi", String.valueOf(mNetworkRssi));
                         CallJsMethod(WebConstants.ON_NETWORK_RSSI, hashMap);
                     }
                 });
@@ -259,7 +261,8 @@ public class WebActivity extends AppCompatActivity {
 
     private void initData() {
 //        url = "http://14.18.63.234:9024";
-        url = "file:///android_asset/demo.html";
+        url = "http://192.168.2.146:8080";
+//        url = "file:///android_asset/demo.html";
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         webviewFragment = null;//(HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS)
