@@ -261,8 +261,8 @@ public class WebActivity extends AppCompatActivity {
 
     private void initData() {
 //        url = "http://14.18.63.234:9024";
-        url = "http://192.168.2.146:8080";
-//        url = "file:///android_asset/demo.html";
+//        url = "http://192.168.2.146:8080";
+        url = "file:///android_asset/demo.html";
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         webviewFragment = null;//(HashMap<String, String>) intent.getExtras().getSerializable(WebConstants.INTENT_TAG_HEADERS)
@@ -804,14 +804,14 @@ public class WebActivity extends AppCompatActivity {
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
-                Log.i(TAG, what.toString());
+                Log.i(TAG,"onScanFinished: " +  what.toString());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        HashMap<String, String> hashMap = new HashMap<>();
+                        HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put(WebConstants.NATIVE2WEB_CALLBACK, WebConstants.ON_BLE_OPERATION);
                         hashMap.put("operation", String.valueOf(8));
-                        hashMap.put("list", what.toString());
+                        hashMap.put("list", what);
                         CallJsMethod(WebConstants.ON_BLE_OPERATION, hashMap);
                     }
                 });
